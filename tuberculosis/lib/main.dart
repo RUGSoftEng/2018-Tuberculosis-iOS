@@ -61,9 +61,10 @@ class MyApp extends StatelessWidget {
                     break;
                 }
                 return new CupertinoPageScaffold(
-                    child: new Scaffold(
-                  body: pageContent,
-                ));
+                    navigationBar: new CupertinoNavigationBar(
+                      middle: new Text("Title")
+                    ),
+                    child: new Scaffold(body: pageContent));
               },
             ),
           );

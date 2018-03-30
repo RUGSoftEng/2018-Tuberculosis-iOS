@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:Tubuddy/pages/tab_page.dart';
 
-class MedicationTabPage extends StatelessWidget {
+class MedicationTabPage extends StatelessWidget implements TabPage {
+  final Text _title = const Text("Medication");
+
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
@@ -9,6 +12,11 @@ class MedicationTabPage extends StatelessWidget {
           return dummyMedicationData[index];
         },
         itemCount: 2);
+  }
+
+  @override
+  Text getTitle() {
+    return _title;
   }
 }
 
