@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:Tubuddy/pages/tab_page.dart';
+import 'package:flutter/cupertino.dart';
 
-class MedicationTabPage extends StatelessWidget {
+class MedicationTabPage extends StatelessWidget implements TabPage {
+  static final Text title = const Text("Medication");
+  static final Icon icon = const Icon(CupertinoIcons.book);
+
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
@@ -9,6 +14,11 @@ class MedicationTabPage extends StatelessWidget {
           return dummyMedicationData[index];
         },
         itemCount: 2);
+  }
+
+  @override
+  Text getTitle() {
+    return title;
   }
 }
 

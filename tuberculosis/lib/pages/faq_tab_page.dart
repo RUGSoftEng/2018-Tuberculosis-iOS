@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:Tubuddy/pages/tab_page.dart';
+import 'package:flutter/cupertino.dart';
 
-class FaqTabPage extends StatelessWidget {
+class FaqTabPage extends StatelessWidget implements TabPage {
+  static final Text title = const Text("FAQ");
+  static final Icon icon = const Icon(CupertinoIcons.conversation_bubble);
+
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
@@ -9,6 +14,11 @@ class FaqTabPage extends StatelessWidget {
           return new InfoEntryItem(dummyFAQ[index]);
         },
         itemCount: 4);
+  }
+
+  @override
+  Text getTitle() {
+    return title;
   }
 }
 

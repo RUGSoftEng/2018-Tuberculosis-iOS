@@ -12,22 +12,22 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       home: new CupertinoTabScaffold(
         tabBar: new CupertinoTabBar(
-          items: const <BottomNavigationBarItem>[
-            const BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.home),
-              title: const Text('Calendar'),
+          items: <BottomNavigationBarItem>[
+            new BottomNavigationBarItem(
+              icon: CalendarTabPage.icon,
+              title: CalendarTabPage.title,
             ),
-            const BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.conversation_bubble),
-              title: const Text('Medication'),
+            new BottomNavigationBarItem(
+              icon: MedicationTabPage.icon,
+              title: MedicationTabPage.title,
             ),
-            const BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.profile_circled),
-              title: const Text('Information'),
+            new BottomNavigationBarItem(
+              icon: InformationTabPage.icon,
+              title: InformationTabPage.title,
             ),
-            const BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.profile_circled),
-              title: const Text('FAQ'),
+            new BottomNavigationBarItem(
+              icon: FaqTabPage.icon,
+              title: FaqTabPage.title,
             ),
           ],
         ),
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
             ),
             child: new CupertinoTabView(
               builder: (BuildContext context) {
-                var pageContent;
+                TabPage pageContent;
                 switch (index) {
                   case 0:
                     pageContent = new CalendarTabPage();
@@ -56,9 +56,9 @@ class MyApp extends StatelessWidget {
                     break;
                 }
                 return new CupertinoPageScaffold(
-                    child: new Scaffold(
-                  body: pageContent,
-                ));
+                    navigationBar: new CupertinoNavigationBar(
+                        middle: pageContent.getTitle()),
+                    child: new Scaffold(body: pageContent));
               },
             ),
           );
