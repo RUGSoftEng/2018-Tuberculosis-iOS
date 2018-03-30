@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:Tubuddy/pages/tab_page.dart';
+import 'package:flutter/cupertino.dart';
 
 class CalendarTabPage extends StatelessWidget implements TabPage {
-  final _title = const Text("Calendar");
+  static final title = const Text("Calendar");
+  static final Icon icon = const Icon(CupertinoIcons.home);
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +14,6 @@ class CalendarTabPage extends StatelessWidget implements TabPage {
 
   @override
   Text getTitle() {
-    return _title;
+    return title;
   }
 }

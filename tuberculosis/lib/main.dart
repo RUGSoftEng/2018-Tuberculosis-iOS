@@ -14,25 +14,20 @@ class MyApp extends StatelessWidget {
         tabBar: new CupertinoTabBar(
           items: <BottomNavigationBarItem>[
             new BottomNavigationBarItem(
-              icon: new Image(
-                image: new AssetImage("graphics/ic_calendar.png"),
-                color: null,
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.center,
-              ),
-              title: const Text('Calendar'),
+              icon: CalendarTabPage.icon,
+              title: CalendarTabPage.title,
             ),
             new BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.book),
-              title: const Text('Medication'),
+              icon: MedicationTabPage.icon,
+              title: MedicationTabPage.title,
             ),
             new BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.info),
-              title: const Text('Information'),
+              icon: InformationTabPage.icon,
+              title: InformationTabPage.title,
             ),
             new BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.conversation_bubble),
-              title: const Text('FAQ'),
+              icon: FaqTabPage.icon,
+              title: FaqTabPage.title,
             ),
           ],
         ),
@@ -62,9 +57,7 @@ class MyApp extends StatelessWidget {
                 }
                 return new CupertinoPageScaffold(
                     navigationBar: new CupertinoNavigationBar(
-                      middle: pageContent.getTitle()
-
-                    ),
+                        middle: pageContent.getTitle()),
                     child: new Scaffold(body: pageContent));
               },
             ),
