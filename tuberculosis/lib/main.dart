@@ -12,21 +12,26 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       home: new CupertinoTabScaffold(
         tabBar: new CupertinoTabBar(
-          items: const <BottomNavigationBarItem>[
-            const BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.home),
+          items: <BottomNavigationBarItem>[
+            new BottomNavigationBarItem(
+              icon: new Image(
+                image: new AssetImage("graphics/ic_calendar.png"),
+                color: null,
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.center,
+              ),
               title: const Text('Calendar'),
             ),
-            const BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.conversation_bubble),
+            new BottomNavigationBarItem(
+              icon: const Icon(CupertinoIcons.book),
               title: const Text('Medication'),
             ),
-            const BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.profile_circled),
+            new BottomNavigationBarItem(
+              icon: const Icon(CupertinoIcons.info),
               title: const Text('Information'),
             ),
-            const BottomNavigationBarItem(
-              icon: const Icon(CupertinoIcons.profile_circled),
+            new BottomNavigationBarItem(
+              icon: const Icon(CupertinoIcons.conversation_bubble),
               title: const Text('FAQ'),
             ),
           ],
