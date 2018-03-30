@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
             ),
             child: new CupertinoTabView(
               builder: (BuildContext context) {
-                var pageContent;
+                TabPage pageContent;
                 switch (index) {
                   case 0:
                     pageContent = new CalendarTabPage();
@@ -62,7 +62,8 @@ class MyApp extends StatelessWidget {
                 }
                 return new CupertinoPageScaffold(
                     navigationBar: new CupertinoNavigationBar(
-                      middle: new Text("Title")
+                      middle: pageContent.getTitle()
+
                     ),
                     child: new Scaffold(body: pageContent));
               },
