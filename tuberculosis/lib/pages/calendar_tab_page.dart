@@ -5,7 +5,10 @@ import 'package:flutter/cupertino.dart';
 
 class CalendarTabPage extends StatelessWidget implements TabPage {
   static final title = const Text("Calendar");
-  static final Icon icon = const Icon(CupertinoIcons.home);
+
+  // 0xf3f3: calendar icon (see: https://raw.githubusercontent.com/flutter/cupertino_icons/master/map.png)
+  static final Icon icon = const Icon(const IconData(0xf3f3,
+      fontFamily: 'CupertinoIcons', fontPackage: 'cupertino_icons'));
 
   @override
   Widget build(BuildContext context) {
