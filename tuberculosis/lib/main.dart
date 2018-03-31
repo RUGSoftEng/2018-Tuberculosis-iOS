@@ -1,8 +1,11 @@
 import 'package:Tubuddy/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  // Disable rotation
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(new MyApp());
 }
 
