@@ -17,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    // TODO: implement something such that this is only shown when a user is not logged in.
     return new CupertinoPageScaffold(
         navigationBar: new CupertinoNavigationBar(
             middle: const Text("Welcome to Tubuddy!")),
