@@ -112,8 +112,7 @@ class CalendarState extends State<Calendar> {
   }
 
   Widget get calendarGridView {
-    return new Container(
-      child: new GestureDetector(
+    return new GestureDetector(
         onHorizontalDragStart: (gestureDetails) => beginSwipe(gestureDetails),
         onHorizontalDragUpdate: (gestureDetails) =>
             getDirection(gestureDetails),
@@ -126,8 +125,7 @@ class CalendarState extends State<Calendar> {
           padding: new EdgeInsets.only(bottom: 0.0),
           children: calendarBuilder(),
         ),
-      ),
-    );
+      );
   }
 
   List<Widget> calendarBuilder() {
@@ -188,16 +186,10 @@ class CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      child: new Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          nameAndIconRow,
-          calendarGridView
-        ],
-      ),
-    );
+    return new ListView(shrinkWrap: true,children: [
+      nameAndIconRow,
+      calendarGridView
+    ]);
   }
 
   void resetToToday() {

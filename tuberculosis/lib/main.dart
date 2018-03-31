@@ -1,8 +1,11 @@
 import 'package:Tubuddy/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  // Disable rotation
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(new MyApp());
 }
 
@@ -72,7 +75,7 @@ class _MyAppState extends State<MyApp> {
                 }
                 return new CupertinoPageScaffold(
                     navigationBar: new CupertinoNavigationBar(
-                        middle: pageContent.getTitle(), backgroundColor: const Color(0xFFF8F8F8)),
+                        middle: pageContent.getTitle()),
                     child: new Material(child: pageContent)
                 );
               },
