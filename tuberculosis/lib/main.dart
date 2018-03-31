@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 
 void main() {
   // Disable rotation
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(new MyApp());
 }
 
@@ -16,11 +17,17 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   DateTime selectedDate;
+  bool _userLoggedIn = false; // replace with actual check in the future.
 
   _MyAppState() : selectedDate = new DateTime.now();
 
   @override
   Widget build(BuildContext context) {
+    if (!_userLoggedIn) {
+      return new LoginPage((bool loggedIn) => setState(() {
+            _userLoggedIn = loggedIn;
+          }));
+    }
     return new MaterialApp(
       home: new CupertinoTabScaffold(
         tabBar: new CupertinoTabBar(
@@ -55,9 +62,11 @@ class _MyAppState extends State<MyApp> {
                 TabPage pageContent;
                 switch (index) {
                   case 0:
-                    pageContent = new CalendarTabPage(selectedDate, (DateTime date) => setState(() {
-                      selectedDate = date;
-                    }));
+                    pageContent = new CalendarTabPage(
+                        selectedDate,
+                        (DateTime date) => setState(() {
+                              selectedDate = date;
+                            }));
                     break;
                   case 1:
                     List<MedicationItem> pills = dummyMedicationData;
@@ -75,9 +84,9 @@ class _MyAppState extends State<MyApp> {
                 }
                 return new CupertinoPageScaffold(
                     navigationBar: new CupertinoNavigationBar(
-                        middle: pageContent.getTitle()),
-                    child: new Material(child: pageContent)
-                );
+                        middle: pageContent.getTitle(),
+                        backgroundColor: const Color(0xFFF8F8F8)),
+                    child: new Material(child: pageContent));
               },
             ),
           );
