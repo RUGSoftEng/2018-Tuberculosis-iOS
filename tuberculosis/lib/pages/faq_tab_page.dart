@@ -13,7 +13,7 @@ class FaqTabPage extends StatelessWidget implements TabPage {
         itemBuilder: (BuildContext context, int index) {
           return new InfoEntryItem(dummyFAQ[index]);
         },
-        itemCount: 4, padding: new EdgeInsets.all(0.0));
+        itemCount: 4);
   }
 
   @override

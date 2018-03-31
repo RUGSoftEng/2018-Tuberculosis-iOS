@@ -17,7 +17,7 @@ class MedicationTabPage extends StatelessWidget implements TabPage {
         itemBuilder: (BuildContext context, int index) {
           return pills[index];
         },
-        itemCount: pills.length, padding: new EdgeInsets.all(0.0),);
+        itemCount: pills.length);
   }
 
   @override
