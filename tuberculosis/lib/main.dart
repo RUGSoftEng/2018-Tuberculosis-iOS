@@ -17,11 +17,17 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   DateTime selectedDate;
+  bool _userLoggedIn = false; // replace with actual check in the future.
 
   _MyAppState() : selectedDate = new DateTime.now();
 
   @override
   Widget build(BuildContext context) {
+    if (!_userLoggedIn) {
+      return new LoginPage((bool loggedIn) => setState(() {
+            _userLoggedIn = loggedIn;
+          }));
+    }
     return new MaterialApp(
       home: new CupertinoTabScaffold(
         tabBar: new CupertinoTabBar(
