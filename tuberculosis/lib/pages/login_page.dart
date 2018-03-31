@@ -2,12 +2,21 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  final ValueChanged<bool> _userLoggedIn;
+
+  LoginPage(this._userLoggedIn);
+
+  @override
+  LoginPageState createState() => new LoginPageState(_userLoggedIn);
+}
+
+class LoginPageState extends State<LoginPage> {
   final ValueChanged<bool> _userLoggedIn;
   final formKey = new GlobalKey<FormState>();
   String _username, _password;
 
-  LoginPage(this._userLoggedIn);
+  LoginPageState(this._userLoggedIn);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +38,7 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget _loginWidget() {
-    Form loginForm = new Form(
+    final loginForm = new Form(
         key: formKey,
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.center,
