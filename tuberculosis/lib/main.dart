@@ -52,9 +52,11 @@ class _MyAppState extends State<MyApp> {
                 TabPage pageContent;
                 switch (index) {
                   case 0:
-                    pageContent = new CalendarTabPage(selectedDate, (DateTime date) => setState(() {
-                      selectedDate = date;
-                    }));
+                    pageContent = new CalendarTabPage(
+                        selectedDate,
+                        (DateTime date) => setState(() {
+                              selectedDate = date;
+                            }));
                     break;
                   case 1:
                     List<MedicationItem> pills = dummyMedicationData;
@@ -72,9 +74,9 @@ class _MyAppState extends State<MyApp> {
                 }
                 return new CupertinoPageScaffold(
                     navigationBar: new CupertinoNavigationBar(
-                        middle: pageContent.getTitle(), backgroundColor: const Color(0xFFF8F8F8)),
-                    child: new Material(child: pageContent)
-                );
+                        middle: pageContent.getTitle(),
+                        backgroundColor: const Color(0xFFF8F8F8)),
+                    child: new Material(child: pageContent));
               },
             ),
           );
