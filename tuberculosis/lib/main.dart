@@ -6,7 +6,16 @@ void main() {
   runApp(new MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => new _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  DateTime selectedDate;
+
+  _MyAppState() : selectedDate = new DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -43,10 +52,16 @@ class MyApp extends StatelessWidget {
                 TabPage pageContent;
                 switch (index) {
                   case 0:
-                    pageContent = new CalendarTabPage();
+                    pageContent = new CalendarTabPage(selectedDate, (DateTime date) => setState(() {
+                      selectedDate = date;
+                    }));
                     break;
                   case 1:
-                    pageContent = new MedicationTabPage();
+                    List<MedicationItem> pills = dummyMedicationData;
+                    if (selectedDate.day != (new DateTime.now()).day) {
+                      pills = [new MedicationItem("Fissa", "Any Time", 1)];
+                    }
+                    pageContent = new MedicationTabPage(pills);
                     break;
                   case 2:
                     pageContent = new InformationTabPage();
@@ -57,8 +72,9 @@ class MyApp extends StatelessWidget {
                 }
                 return new CupertinoPageScaffold(
                     navigationBar: new CupertinoNavigationBar(
-                        middle: pageContent.getTitle()),
-                    child: new Scaffold(body: pageContent));
+                        middle: pageContent.getTitle(), backgroundColor: const Color(0xFFF8F8F8)),
+                    child: new Material(child: pageContent)
+                );
               },
             ),
           );

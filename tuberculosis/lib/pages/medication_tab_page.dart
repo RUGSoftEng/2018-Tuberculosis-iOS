@@ -7,13 +7,17 @@ class MedicationTabPage extends StatelessWidget implements TabPage {
   static final Text title = const Text("Medication");
   static final Icon icon = const Icon(CupertinoIcons.book);
 
+  final List<MedicationItem> pills;
+
+  MedicationTabPage(this.pills);
+
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
         itemBuilder: (BuildContext context, int index) {
-          return dummyMedicationData[index];
+          return pills[index];
         },
-        itemCount: 2);
+        itemCount: pills.length, padding: new EdgeInsets.all(0.0),);
   }
 
   @override
