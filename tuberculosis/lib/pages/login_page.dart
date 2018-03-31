@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 class LoginPage extends StatefulWidget {
+  static _LoginPageState of(BuildContext context) =>
+      context.ancestorStateOfType(const TypeMatcher<_LoginPageState>());
+
   @override
-  State<StatefulWidget> createState() => new _LoginPageState();
+  _LoginPageState createState() => new _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool _isLoggedIn;
+  bool _loggedIn;
+
+  bool get isLoggedIn => _loggedIn;
 
   @override
   Widget build(BuildContext context) {
