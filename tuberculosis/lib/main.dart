@@ -84,8 +84,7 @@ class _MyAppState extends State<MyApp> {
                 }
                 return new CupertinoPageScaffold(
                     navigationBar: new CupertinoNavigationBar(
-                        middle: pageContent.getTitle(),
-                        backgroundColor: const Color(0xFFF8F8F8)),
+                        middle: pageContent.getTitle()),
                     child: new Material(child: pageContent));
               },
             ),
