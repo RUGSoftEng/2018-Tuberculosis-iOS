@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
+import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   final ValueChanged<bool> _userLoggedIn;
@@ -89,9 +90,8 @@ class LoginPageState extends State<LoginPage> {
                 _logInButtonDisabled ? "Logging In..." : "Log In",
                 style: const TextStyle(color: Colors.white),
               ),
-              color: _logInButtonDisabled
-                  ? Colors.grey
-                  : Colors.lightBlueAccent,
+              color:
+                  _logInButtonDisabled ? Colors.grey : Colors.lightBlueAccent,
             )));
 
     final forgottenPasswordButton = new FlatButton(
@@ -148,17 +148,16 @@ class LoginPageState extends State<LoginPage> {
     } else {
       http
           .post(_apiUrl + "/accounts/login",
-              body: {"username": _username, "password": _password})
+              body: JSON.encode({"username": _username, "password": _password}))
           .timeout(const Duration(seconds: 5))
           .then((response) {
-            if (response.statusCode == HttpStatus.OK) {
-              // TODO store received API token somewhere, add blocking spinner.
-              _userLoggedIn(true);
-            } else {
-              _showLogInError("Username or password incorrect.");
-            }
-          })
-          .catchError(
+        if (response.statusCode == HttpStatus.OK) {
+          // TODO store received API token somewhere, add blocking spinner.
+          _userLoggedIn(true);
+        } else {
+          _showLogInError("Username or password incorrect.");
+        }
+      }).catchError(
               (e) => _showLogInError("Error: could not connect to server."));
     }
   }
