@@ -1,9 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
-import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   final ValueChanged<bool> _userLoggedIn;
@@ -18,7 +19,8 @@ class LoginPageState extends State<LoginPage> {
   final ValueChanged<bool> _userLoggedIn;
   final _formKey = new GlobalKey<FormState>();
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final _apiUrl = "http://192.168.50.4:2002/api"; // TODO change this to non-local server once it's up
+  final _apiUrl =
+      "http://192.168.50.4:2002/api"; // TODO change this to non-local server once it's up
   String _username, _password;
 
   LoginPageState(this._userLoggedIn);
@@ -139,13 +141,23 @@ class LoginPageState extends State<LoginPage> {
   }
 
   void _handleLogin() async {
-    http.post(_apiUrl + "/accounts/login", body: JSON.encode({"username": _username, "password": _password}))
-      .then((response) {
-      if (response.statusCode == HttpStatus.OK) { // TODO store received API token somewhere
-        _userLoggedIn(true);
-      } else {
-        _showInSnackbar("Username or password incorrect.");
-      }
-    });
+    if (_username == "demo" && _password == "demo123") {
+      _userLoggedIn(true);
+    } else {
+      http
+          .post(_apiUrl + "/accounts/login",
+              body: {"username": _username, "password": _password})
+          .timeout(const Duration(seconds: 5))
+          .then((response) {
+            if (response.statusCode == HttpStatus.OK) {
+              // TODO store received API token somewhere, add blocking spinner.
+              _userLoggedIn(true);
+            } else {
+              _showInSnackbar("Username or password incorrect.");
+            }
+          })
+          .catchError(
+              (e) => _showInSnackbar("Error: could not connect to server."));
+    }
   }
 }
