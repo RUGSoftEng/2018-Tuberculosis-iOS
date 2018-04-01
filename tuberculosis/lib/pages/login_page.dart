@@ -20,6 +20,7 @@ class LoginPageState extends State<LoginPage> {
   final _apiUrl =
       "http://192.168.50.4:2002/api"; // TODO change this to non-local server once it's up
   String _username, _password;
+  bool _logInButtonDisabled = false;
 
   LoginPageState(this._userLoggedIn);
 
@@ -83,12 +84,14 @@ class LoginPageState extends State<LoginPage> {
             child: new MaterialButton(
               minWidth: 200.0,
               height: 42.0,
-              onPressed: _processForm,
+              onPressed: _logInButtonDisabled ? null : _processForm,
               child: new Text(
-                "Log In",
+                _logInButtonDisabled ? "Logging In..." : "Log In",
                 style: const TextStyle(color: Colors.white),
               ),
-              color: Colors.lightBlueAccent,
+              color: _logInButtonDisabled
+                  ? Colors.grey
+                  : Colors.lightBlueAccent,
             )));
 
     final forgottenPasswordButton = new FlatButton(
@@ -139,6 +142,7 @@ class LoginPageState extends State<LoginPage> {
   }
 
   void _handleLogin() async {
+    setState(() => _logInButtonDisabled = true);
     if (_username == "demo" && _password == "demo123") {
       _userLoggedIn(true);
     } else {
@@ -151,11 +155,16 @@ class LoginPageState extends State<LoginPage> {
               // TODO store received API token somewhere, add blocking spinner.
               _userLoggedIn(true);
             } else {
-              _showInSnackbar("Username or password incorrect.");
+              _showLogInError("Username or password incorrect.");
             }
           })
           .catchError(
-              (e) => _showInSnackbar("Error: could not connect to server."));
+              (e) => _showLogInError("Error: could not connect to server."));
     }
+  }
+
+  void _showLogInError(String val) {
+    _showInSnackbar(val);
+    setState(() => _logInButtonDisabled = false);
   }
 }
