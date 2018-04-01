@@ -46,25 +46,55 @@ class LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            new ListTile(
-                title: new TextFormField(
-              decoration: new InputDecoration(labelText: "Username"),
+            new Image.asset('graphics/logo.png', scale: 0.5),
+            new TextFormField(
+              decoration: new InputDecoration(
+                  hintText: "Username",
+                  contentPadding:
+                      const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  border: new OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(32.0))),
               validator: _validateUsername,
               onSaved: (val) => _username = val,
               keyboardType: TextInputType.emailAddress,
               autocorrect: false,
-            )),
-            new ListTile(
-                title: new TextFormField(
-              decoration: new InputDecoration(labelText: "Password"),
+            ),
+            const SizedBox(height: 12.0),
+            new TextFormField(
+              decoration: new InputDecoration(
+                  hintText: "Password",
+                  contentPadding:
+                      const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                  border: new OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(32.0))),
               validator: _validatePassword,
               onSaved: (val) => _password = val,
               obscureText: true,
-            )),
-            const SizedBox(height: 24.0),
-            new ListTile(
-                title: new RaisedButton(
-                    onPressed: _processForm, child: new Text("Log In")))
+            ),
+            const SizedBox(height: 6.0),
+            new Padding(
+                padding: new EdgeInsets.only(top: 16.0),
+                child: new Material(
+                    borderRadius: new BorderRadius.circular(30.0),
+                    shadowColor: Colors.lightBlueAccent.shade100,
+                    elevation: 5.0,
+                    child: new MaterialButton(
+                      onPressed: _processForm,
+                      child: new Text(
+                        "Log In",
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      color: Colors.lightBlueAccent,
+                    ))),
+            const SizedBox(height: 12.0),
+            new FlatButton(
+              child: const Text(
+                'Forgot password?',
+                style: const TextStyle(color: Colors.black54),
+              ),
+              onPressed: () =>
+                  null, // TODO: implement forgotten password function.
+            )
           ],
         ));
     return loginForm;
@@ -72,7 +102,6 @@ class LoginPageState extends State<LoginPage> {
 
   String _validatePassword(String val) {
     if (val.isEmpty) return "Please enter a password.";
-    if (val.length < 6) return "Password too short.";
     return null;
   }
 
