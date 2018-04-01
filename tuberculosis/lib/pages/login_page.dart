@@ -51,6 +51,7 @@ class LoginPageState extends State<LoginPage> {
               decoration: new InputDecoration(labelText: "Username"),
               validator: _validateUsername,
               onSaved: (val) => _username = val,
+              keyboardType: TextInputType.multiline,
               autocorrect: false,
             )),
             new ListTile(
