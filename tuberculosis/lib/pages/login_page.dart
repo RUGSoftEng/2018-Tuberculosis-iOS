@@ -101,8 +101,6 @@ class LoginPageState extends State<LoginPage> {
     final loginForm = new Form(
         key: _formKey,
         child: new ListView(
-//          mainAxisAlignment: MainAxisAlignment.center,
-//          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             logo,
             usernameField,
