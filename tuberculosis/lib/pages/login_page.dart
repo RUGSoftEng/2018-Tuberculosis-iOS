@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,8 +30,7 @@ class LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return new MaterialApp(
         home: new CupertinoPageScaffold(
-            navigationBar: new CupertinoNavigationBar(
-                middle: const Text("Welcome to Tubuddy!")),
+            navigationBar: new CupertinoNavigationBar(middle: const Text("Welcome to Tubuddy!")),
             child: new Scaffold(
                 key: _scaffoldKey,
                 body: new DefaultTextStyle(
@@ -41,13 +41,11 @@ class LoginPageState extends State<LoginPage> {
                     ),
                     child: new Padding(
                         padding: new EdgeInsets.all(30.0),
-                        child: new Container(
-                            child: new Center(child: _loginWidget())))))));
+                        child: new Container(child: new Center(child: _loginWidget())))))));
   }
 
   void _showInSnackbar(String val) {
-    _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(val)));
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text(val)));
   }
 
   Widget _loginWidget() {
@@ -57,8 +55,7 @@ class LoginPageState extends State<LoginPage> {
       decoration: new InputDecoration(
           hintText: "Username",
           contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          border: new OutlineInputBorder(
-              borderRadius: new BorderRadius.circular(32.0))),
+          border: new OutlineInputBorder(borderRadius: new BorderRadius.circular(32.0))),
       validator: _validateUsername,
       onSaved: (val) => _username = val,
       keyboardType: TextInputType.emailAddress,
@@ -69,13 +66,12 @@ class LoginPageState extends State<LoginPage> {
       decoration: new InputDecoration(
           hintText: "Password",
           contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          border: new OutlineInputBorder(
-              borderRadius: new BorderRadius.circular(32.0))),
+          border: new OutlineInputBorder(borderRadius: new BorderRadius.circular(32.0))),
       validator: _validatePassword,
       onSaved: (val) => _password = val,
       obscureText: true,
     );
-
+    
     final loginButton = new CupertinoButton(
         onPressed: _logInButtonDisabled ? null : _processForm,
         child: new Text(_logInButtonDisabled ? "Logging In..." : "Log In"));
@@ -91,9 +87,7 @@ class LoginPageState extends State<LoginPage> {
 
     final loginForm = new Form(
         key: _formKey,
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
+        child: new ListView(
           children: <Widget>[
             logo,
             usernameField,
@@ -121,6 +115,7 @@ class LoginPageState extends State<LoginPage> {
     final form = _formKey.currentState;
     if (form.validate()) {
       form.save();
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
       _handleLogin();
     }
   }
@@ -132,7 +127,7 @@ class LoginPageState extends State<LoginPage> {
     } else {
       http
           .post(_apiUrl + "/accounts/login",
-              body: JSON.encode({"username": _username, "password": _password}))
+              body: json.encode({"username": _username, "password": _password}))
           .timeout(const Duration(seconds: 5))
           .then((response) {
         if (response.statusCode == HttpStatus.OK) {
@@ -141,8 +136,7 @@ class LoginPageState extends State<LoginPage> {
         } else {
           _showLogInError("Username or password incorrect.");
         }
-      }).catchError(
-              (e) => _showLogInError("Error: could not connect to server."));
+      }).catchError((e) => _showLogInError("Error: could not connect to server."));
     }
   }
 
