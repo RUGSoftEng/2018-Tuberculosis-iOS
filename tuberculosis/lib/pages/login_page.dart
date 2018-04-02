@@ -71,28 +71,15 @@ class LoginPageState extends State<LoginPage> {
       onSaved: (val) => _password = val,
       obscureText: true,
     );
-
-    final loginButton = new Padding(
-        padding: new EdgeInsets.only(top: 16.0),
-        child: new Material(
-            borderRadius: new BorderRadius.circular(30.0),
-            shadowColor: Colors.lightBlueAccent.shade100,
-            elevation: 5.0,
-            child: new MaterialButton(
-              minWidth: 200.0,
-              height: 42.0,
-              onPressed: _logInButtonDisabled ? null : _processForm,
-              child: new Text(
-                _logInButtonDisabled ? "Logging In..." : "Log In",
-                style: const TextStyle(color: Colors.white),
-              ),
-              color: _logInButtonDisabled ? Colors.grey : Colors.lightBlueAccent,
-            )));
+    
+    final loginButton = new CupertinoButton(
+        onPressed: _logInButtonDisabled ? null : _processForm,
+        child: new Text(_logInButtonDisabled ? "Logging In..." : "Log In"));
 
     final forgottenPasswordButton = new FlatButton(
         child: const Text(
           "Forgotten Password",
-          style: const TextStyle(color: Colors.black54),
+          style: const TextStyle(color: Colors.black45),
         ),
         onPressed: () => _showInSnackbar(
             "Implementation needed.") // TODO: implement forgotten password function.
@@ -108,9 +95,7 @@ class LoginPageState extends State<LoginPage> {
             passwordField,
             const SizedBox(height: 6.0),
             loginButton,
-            const SizedBox(height: 12.0),
-            forgottenPasswordButton,
-            const SizedBox(height: 50.0)
+            forgottenPasswordButton
           ],
         ));
     return loginForm;
