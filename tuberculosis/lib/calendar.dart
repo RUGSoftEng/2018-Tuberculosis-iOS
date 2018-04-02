@@ -113,19 +113,18 @@ class CalendarState extends State<Calendar> {
 
   Widget get calendarGridView {
     return new GestureDetector(
-        onHorizontalDragStart: (gestureDetails) => beginSwipe(gestureDetails),
-        onHorizontalDragUpdate: (gestureDetails) =>
-            getDirection(gestureDetails),
-        onHorizontalDragEnd: (gestureDetails) => endSwipe(gestureDetails),
-        child: new FixedGridView.count(
-          shrinkWrap: true,
-          crossAxisCount: 7,
-          childAspectRatio: 1.5,
-          mainAxisSpacing: 0.0,
-          padding: new EdgeInsets.only(bottom: 0.0),
-          children: calendarBuilder(),
-        ),
-      );
+      onHorizontalDragStart: (gestureDetails) => beginSwipe(gestureDetails),
+      onHorizontalDragUpdate: (gestureDetails) => getDirection(gestureDetails),
+      onHorizontalDragEnd: (gestureDetails) => endSwipe(gestureDetails),
+      child: new FixedGridView.count(
+        shrinkWrap: true,
+        crossAxisCount: 7,
+        childAspectRatio: 1.5,
+        mainAxisSpacing: 0.0,
+        padding: new EdgeInsets.only(bottom: 0.0),
+        children: calendarBuilder(),
+      ),
+    );
   }
 
   List<Widget> calendarBuilder() {
@@ -133,7 +132,7 @@ class CalendarState extends State<Calendar> {
     List<DateTime> calendarDays = selectedMonthsDays;
 
     Utils.weekdays.forEach(
-          (day) {
+      (day) {
         dayWidgets.add(
           new CalendarTile(
             isDayOfWeek: true,
@@ -147,7 +146,7 @@ class CalendarState extends State<Calendar> {
     bool monthEnded = false;
 
     calendarDays.forEach(
-          (day) {
+      (day) {
         if (monthStarted && day.day == 01) {
           monthEnded = true;
         }
@@ -186,10 +185,10 @@ class CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-    return new ListView(shrinkWrap: true,children: [
-      nameAndIconRow,
-      calendarGridView
-    ]);
+    final mediaQuery = MediaQuery.of(context);
+    return new Padding(
+        child: new Column(children: [nameAndIconRow, calendarGridView]),
+        padding: mediaQuery.padding);
   }
 
   void resetToToday() {
@@ -256,6 +255,7 @@ class CalendarState extends State<Calendar> {
 
   var gestureStart;
   var gestureDirection;
+
   void beginSwipe(DragStartDetails gestureDetails) {
     gestureStart = gestureDetails.globalPosition.dx;
   }
