@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -99,9 +100,7 @@ class LoginPageState extends State<LoginPage> {
 
     final loginForm = new Form(
         key: _formKey,
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
+        child: new ListView(
           children: <Widget>[
             logo,
             usernameField,
@@ -131,6 +130,7 @@ class LoginPageState extends State<LoginPage> {
     final form = _formKey.currentState;
     if (form.validate()) {
       form.save();
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
       _handleLogin();
     }
   }
