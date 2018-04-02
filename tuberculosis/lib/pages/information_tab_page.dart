@@ -31,10 +31,8 @@ final List<InfoEntry> dummyInfo = <InfoEntry>[
 ];
 
 class InfoEntry {
-  InfoEntry(this.topic, [this.children = const <InfoEntry>[]]);
-
+  InfoEntry(this.topic);
   final String topic;
-  final List<InfoEntry> children;
 }
 
 class InfoEntryItem extends StatelessWidget {
