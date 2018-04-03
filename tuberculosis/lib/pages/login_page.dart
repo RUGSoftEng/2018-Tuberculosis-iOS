@@ -28,8 +28,7 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-        home: new CupertinoPageScaffold(
+    return new CupertinoPageScaffold(
             navigationBar: new CupertinoNavigationBar(
                 middle: const Text("Welcome to Tubuddy!")),
             child: new Scaffold(
@@ -43,7 +42,7 @@ class LoginPageState extends State<LoginPage> {
                     child: new Padding(
                         padding: new EdgeInsets.all(30.0),
                         child: new Container(
-                            child: new Center(child: _loginWidget())))))));
+                            child: new Center(child: _loginWidget()))))));
   }
 
   void _showInSnackbar(String val) {
