@@ -10,6 +10,8 @@ dependencies:
   cupertino_icons: ^0.1.0
   flutter_calendar: ^0.0.1
   url_launcher: ^3.0.0
+  intl: ^0.15.0
+  tuple: ^1.0.0
 
 dev_dependencies:
   flutter_test:
