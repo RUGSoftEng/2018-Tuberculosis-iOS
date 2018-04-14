@@ -80,7 +80,7 @@ class LoginPageState extends State<LoginPage> {
         onPressed: _logInButtonDisabled ? null : _processForm,
         child: new Text(_logInButtonDisabled ? "Logging In..." : "Log In"));
 
-    final forgottenPasswordButton = new FlatButton(
+    final forgottenPasswordButton = new CupertinoButton(
         child: const Text(
           "Forgotten Password",
           style: const TextStyle(color: Colors.black45),
