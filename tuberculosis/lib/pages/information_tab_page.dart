@@ -32,6 +32,7 @@ final List<InfoEntry> dummyInfo = <InfoEntry>[
 
 class InfoEntry {
   InfoEntry(this.topic);
+
   final String topic;
 }
 
@@ -45,8 +46,10 @@ class InfoEntryItem extends StatelessWidget {
     return new ListTile(
         title: new Text(infoEntry.topic),
         onTap: () {
-          Navigator.push(context,
-              new MaterialPageRoute(builder: (context) => new VideoScreen(infoEntry.topic)));
+          Navigator.push(
+              context,
+              new CupertinoPageRoute(
+                  builder: (context) => new VideoScreen(infoEntry.topic)));
         });
   }
 }
@@ -64,23 +67,28 @@ class VideoScreen extends StatelessWidget {
       "https://www.youtube.com/watch?v=yR51KVF4OX0",
       "https://www.youtube.com/watch?v=yR51KVF4OX0"
     ];
-    return new Scaffold(
-        appBar: new AppBar(
-          title: new Text(_topic),
+    return new CupertinoPageScaffold(
+        navigationBar: new CupertinoNavigationBar(
+          middle: new Text(_topic),
         ),
-        body: new GridView.count(
-            primary: false,
-            padding: const EdgeInsets.all(20.0),
-            crossAxisSpacing: 10.0,
-            crossAxisCount: 2,
-            children: sampleData.map((String url) {
-              return new GridTile(
-                  child: new GestureDetector(
-                      onTap: () => _openVideo(url),
-                      child: new Image.network(
-                          "http://img.youtube.com/vi/" + getIdFromUrl(url) + "/hqdefault.jpg",
-                          fit: BoxFit.cover)));
-            }).toList()));
+        child: new Material(
+            child: new Padding(
+                padding: MediaQuery.of(context).padding * 2.0,
+                child: new GridView.count(
+                    primary: false,
+                    padding: const EdgeInsets.all(20.0),
+                    crossAxisSpacing: 10.0,
+                    crossAxisCount: 2,
+                    children: sampleData.map((String url) {
+                      return new GridTile(
+                          child: new GestureDetector(
+                              onTap: () => _openVideo(url),
+                              child: new Image.network(
+                                  "http://img.youtube.com/vi/" +
+                                      getIdFromUrl(url) +
+                                      "/hqdefault.jpg",
+                                  fit: BoxFit.cover)));
+                    }).toList()))));
   }
 
   String getIdFromUrl(String url) {
