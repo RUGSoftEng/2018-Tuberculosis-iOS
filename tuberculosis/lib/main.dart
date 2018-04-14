@@ -17,7 +17,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   DateTime selectedDate;
-  bool _userLoggedIn = false; // replace with actual check in the future.
+  bool _userLoggedIn = true; // replace with actual check in the future.
 
   _MyAppState() : selectedDate = new DateTime.now();
 
@@ -70,9 +70,6 @@ class _MyAppState extends State<MyApp> {
                     break;
                   case 1:
                     List<MedicationItem> pills = dummyMedicationData;
-                    if (selectedDate.day != (new DateTime.now()).day) {
-                      pills = [new MedicationItem("Fissa", "Any Time", 1)];
-                    }
                     pageContent = new MedicationTabPage(pills);
                     break;
                   case 2:
