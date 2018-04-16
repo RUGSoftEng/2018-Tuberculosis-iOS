@@ -199,6 +199,8 @@ class CalendarState extends State<Calendar> {
       updateSelectedRange(firstDateOfNewMonth, lastDateOfNewMonth);
       selectedMonthsDays = Utils.daysInMonth(today);
       displayMonth = Utils.formatMonth(today);
+      _selectedDate = today;
+      widget?.onDateSelected(_selectedDate);
     });
   }
 
