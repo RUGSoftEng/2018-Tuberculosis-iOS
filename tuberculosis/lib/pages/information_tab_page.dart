@@ -72,8 +72,7 @@ class VideoScreen extends StatelessWidget {
           middle: new Text(_topic),
         ),
         child: new Material(
-            child: new Padding(
-                padding: MediaQuery.of(context).padding * 2.0,
+            child: new SafeArea(
                 child: new GridView.count(
                     primary: false,
                     padding: const EdgeInsets.all(20.0),
