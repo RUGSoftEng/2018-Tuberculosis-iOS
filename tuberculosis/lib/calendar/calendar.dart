@@ -199,7 +199,7 @@ class CalendarState extends State<Calendar> {
       updateSelectedRange(firstDateOfNewMonth, lastDateOfNewMonth);
       selectedMonthsDays = Utils.daysInMonth(today);
       displayMonth = Utils.formatMonth(today);
-      _setDateToday(today);
+      _setDateSelected(today);
     });
   }
 
@@ -245,7 +245,7 @@ class CalendarState extends State<Calendar> {
       var lastDayOfCurrentWeek = Utils.lastDayOfWeek(selected);
 
       setState(() {
-        _setDateToday(selected);
+        _setDateSelected(selected);
         selectedWeeksDays = Utils
             .daysInRange(firstDayOfCurrentWeek, lastDayOfCurrentWeek)
             .toList();
@@ -291,7 +291,7 @@ class CalendarState extends State<Calendar> {
     }
   }
 
-  void _setDateToday(DateTime date) {
+  void _setDateSelected(DateTime date) {
     _selectedDate = date;
     widget.onDateSelected(date);
   }
