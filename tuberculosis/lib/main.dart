@@ -17,7 +17,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   DateTime selectedDate;
-  bool _userLoggedIn = true; // replace with actual check in the future.
+  bool _userLoggedIn = false; // replace with actual check in the future.
 
   _MyAppState() : selectedDate = new DateTime.now();
 
