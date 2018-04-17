@@ -67,5 +67,10 @@ post_install do |installer|
     target.build_configurations.each do |config|
       config.build_settings['ENABLE_BITCODE'] = 'NO'
     end
+    # this fixes a dependency issue caused by the url_launcher plugin
+    # see https://groups.google.com/d/msg/flutter-dev/c_ECYG1fzbk/kRkEZTkoAgAJ
+    target.headers_build_phase.files.each do |file|
+        file.settings = { 'ATTRIBUTES' => ['Public'] }
+    end
   end
 end

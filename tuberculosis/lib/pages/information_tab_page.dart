@@ -56,6 +56,7 @@ class InformationTabPage extends StatelessWidget implements TabPage {
 
 class InfoEntry {
   InfoEntry(this.topic);
+
   final String topic;
 }
 
@@ -69,8 +70,10 @@ class InfoEntryItem extends StatelessWidget {
     return new ListTile(
         title: new Text(infoEntry.topic),
         onTap: () {
-          Navigator.push(context,
-              new MaterialPageRoute(builder: (context) => new VideoScreen(infoEntry.topic)));
+          Navigator.push(
+              context,
+              new CupertinoPageRoute(
+                  builder: (context) => new VideoScreen(infoEntry.topic)));
         });
   }
 }

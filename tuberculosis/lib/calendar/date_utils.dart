@@ -16,23 +16,23 @@ class Utils {
   static String apiDayFormat(DateTime d) => _apiDayFormat.format(d);
 
   static const List<String> weekdays = const [
-    "S",
     "M",
     "T",
     "W",
     "T",
     "F",
+    "S",
     "S"
   ];
 
   /// The list of days in a given month
   static List<DateTime> daysInMonth(DateTime month) {
     var first = firstDayOfMonth(month);
-    var daysBefore = first.weekday;
+    // Account for week starting on Sunday.
+    var daysBefore = first.weekday - 1;
     var firstToDisplay = first.subtract(new Duration(days: daysBefore));
     var last = Utils.lastDayOfMonth(month);
-
-    var daysAfter = 7 - last.weekday;
+    var daysAfter = 7 - last.weekday + 1;
     var lastToDisplay = last.add(new Duration(days: daysAfter));
     return daysInRange(firstToDisplay, lastToDisplay).toList();
   }
