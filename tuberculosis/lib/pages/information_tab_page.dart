@@ -11,7 +11,7 @@ class InformationTabPage extends StatelessWidget implements TabPage {
   static final Text title = const Text("Information");
   static final Icon icon = const Icon(CupertinoIcons.info);
   final _apiUrl =
-    "http://192.168.50.4:2002/api"; // TODO change this to non-local server once it's up
+    "http://37.97.185.127:10123/api"; // TODO change this to non-local server once it's up
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class InformationTabPage extends StatelessWidget implements TabPage {
     return title;
   }
 
-  Future<List> _getTopics() async {
+  Future<List<String>> _getTopics() async {
     final response = await http.get(_apiUrl + "/general/videos/topics");
     final responseJson = await json.decode(response.body);
 
@@ -73,8 +73,57 @@ class InfoEntryItem extends StatelessWidget {
           Navigator.push(
               context,
               new CupertinoPageRoute(
-                  builder: (context) => new VideoScreen(infoEntry.topic)));
+                  builder: (context) => VideoSelectorScreen(infoEntry.topic)));
         });
+  }
+}
+
+class VideoSelectorScreen extends StatelessWidget {
+  const VideoSelectorScreen(this._topic);
+
+  final String _topic;
+  final _apiUrl =
+      "http://37.97.185.127:10123/api";
+
+  @override
+  Widget build(BuildContext context) {
+    return new CupertinoPageScaffold(
+        navigationBar: new CupertinoNavigationBar(
+        middle: new Text(_topic),
+      ),
+      child: new FutureBuilder<List<Video>>(
+        future: _getVideos(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Material(child: ListView(children: snapshot.data.map((v) => ListTile(
+              title: Text(v.title),
+              onTap: () => Navigator.push(
+                  context,
+                  new CupertinoPageRoute(
+                      builder: (context) => VideoScreen(v)
+                  )
+              ),
+            )).toList(),));
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          } else {
+            return Center(child: new CircularProgressIndicator(),);
+          }
+        }
+      )
+    );
+  }
+
+  Future<List<Video>> _getVideos() async {
+    final response = await http.get(_apiUrl + "/general/videos/topics/" + _topic);
+    final responseJson = await json.decode(response.body);
+
+    List<Video> videos = [];
+    for (Map video in responseJson) {
+      videos.add(new Video.fromJson(video));
+    }
+
+    return videos;
   }
 }
 
@@ -95,64 +144,27 @@ class Video {
 }
 
 class VideoScreen extends StatelessWidget {
-  const VideoScreen(this._topic);
+  const VideoScreen(this._video);
 
-  final String _topic;
+  final Video _video;
   final _apiUrl =
-      "http://192.168.50.4:2002/api"; // TODO change this to non-local server once it's up
+      "http://37.97.185.127:10123/api";
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(_topic),
+    return new CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text(_video.title)
       ),
-      body: new FutureBuilder<List<Video>>(
-        future: _getVideos(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return new GridView.count(
-              primary: false,
-              padding: const EdgeInsets.all(20.0),
-              crossAxisSpacing: 10.0,
-              crossAxisCount: 2,
-              children: snapshot.data.map((Video video) {
-                return new GridTile(
-                  child: new GestureDetector(
-                    onTap: () => _openVideo(video.reference),
-                    child: new Image.network("http://img.youtube.com/vi/" + getIdFromUrl(video.reference) + "/hqdefault.jpg",
-                    fit: BoxFit.cover)
-                  ),
-                );
-              }).toList()
-            );
-          }
-          else if (snapshot.hasError) {
-            return new Text("${snapshot.error}");
-          }
-          // By default, show a loading spinner
-          return new Center(
-            child: new CircularProgressIndicator(),
-          );
-        },
+      child: GestureDetector(
+        child: new Image.network("http://img.youtube.com/vi/" + getIdFromUrl(_video.reference) + "/hqdefault.jpg"),
+        onTap: () => _openVideo(_video.reference),
       )
     );
   }
 
   String getIdFromUrl(String url) {
     return url.substring(url.indexOf("?v=") + 3);
-  }
-
-  Future<List> _getVideos() async {
-    final response = await http.get(_apiUrl + "/general/videos/topics/" + _topic);
-    final responseJson = await json.decode(response.body);
-
-    List<Video> videos = [];
-    for (Map video in responseJson) {
-      videos.add(new Video.fromJson(video));
-    }
-
-    return videos;
   }
 
   _openVideo(String url) async {
