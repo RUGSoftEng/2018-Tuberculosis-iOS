@@ -11,7 +11,7 @@ class FaqTabPage extends StatelessWidget implements TabPage {
   Widget build(BuildContext context) {
     return new ListView.builder(
         itemBuilder: (BuildContext context, int index) {
-          return new InfoEntryItem(dummyFAQ[index]);
+          return new FAQEntryItem(dummyFAQ[index]);
         },
         itemCount: 4);
   }
@@ -40,8 +40,8 @@ class FAQEntry {
   final String answer;
 }
 
-class InfoEntryItem extends StatelessWidget {
-  const InfoEntryItem(this.infoEntry);
+class FAQEntryItem extends StatelessWidget {
+  const FAQEntryItem(this.infoEntry);
 
   final FAQEntry infoEntry;
 

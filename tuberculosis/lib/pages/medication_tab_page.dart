@@ -44,7 +44,8 @@ class MedicationItem extends StatelessWidget {
         leading: const Icon(Icons.healing),
         title: new Text(this.medicationName),
         subtitle: recommendedDosage != 1
-            ? new Text(recommendedTime + " - " + recommendedDosage.toString() + " pills")
-            : new Text(recommendedTime + " - " + recommendedDosage.toString() + " pill"));
+          ? new Text(recommendedTime + " - " + recommendedDosage.toString() + " pills")
+          : new Text(recommendedTime + " - " + recommendedDosage.toString() + " pill")
+    );
   }
 }
