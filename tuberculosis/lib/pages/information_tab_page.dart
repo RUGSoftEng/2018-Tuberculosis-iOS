@@ -123,25 +123,16 @@ class VideoScreen extends StatelessWidget {
                 child: new Column(
                   children: [
                     new GestureDetector(
-                      onTap: () => _openVideo(sampleData[0]),
+                      onTap: () => _openVideo(_video.reference),
                       child: new Image.network(
                           "http://img.youtube.com/vi/" +
-                              getIdFromUrl(sampleData[0]) +
+                              getIdFromUrl(_video.reference) +
                               "/hqdefault.jpg",
                           fit: BoxFit.cover),
                     ),
                     new QuizWidget(questions)
                   ],
                 ))));
-//    return new CupertinoPageScaffold(
-//      navigationBar: CupertinoNavigationBar(
-//        middle: Text(_video.title)
-//      ),
-//      child: GestureDetector(
-//        child: new Image.network("http://img.youtube.com/vi/" + getIdFromUrl(_video.reference) + "/hqdefault.jpg"),
-//        onTap: () => _openVideo(_video.reference),
-//      )
-//    );
   }
 
   String getIdFromUrl(String url) {
