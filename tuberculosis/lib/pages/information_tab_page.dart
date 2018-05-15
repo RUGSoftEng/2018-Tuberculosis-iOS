@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:Tubuddy/pages/tab_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:Tubuddy/quiz/quiz.dart';
 
 class InformationTabPage extends StatelessWidget implements TabPage {
   static final Text title = const Text("Information");
@@ -66,8 +67,6 @@ class VideoSelectorScreen extends StatelessWidget {
   const VideoSelectorScreen(this._topic);
 
   final String _topic;
-  final _apiUrl =
-      "http://37.97.185.127:10123/api";
 
   @override
   Widget build(BuildContext context) {
@@ -106,15 +105,34 @@ class VideoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> sampleData = <String>[
+      "https://www.youtube.com/watch?v=yR51KVF4OX0",
+      "https://www.youtube.com/watch?v=yR51KVF4OX0"
+    ];
+    List<Question> questions = <Question>[
+      const Question("Hoi"),
+      const Question("Vraag 2"),
+      new Question("ASdadasda", answers: ["asdsadsadasadsasaasdas", "bgbgbgbgbgbg", "cdiasdihsjsdjfhskjfhskdfhkshjkjkhksfdhjkh"], correctAnswer: 2)
+    ];
     return new CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: Text(_video.title)
-      ),
-      child: GestureDetector(
-        child: new Image.network("http://img.youtube.com/vi/" + getIdFromUrl(_video.reference) + "/hqdefault.jpg"),
-        onTap: () => _openVideo(_video.reference),
-      )
-    );
+        navigationBar: new CupertinoNavigationBar(
+          middle: new Text(_video.title),
+        ),
+        child: new Material(
+            child: new SafeArea(
+                child: new Column(
+                  children: [
+                    new GestureDetector(
+                      onTap: () => _openVideo(_video.reference),
+                      child: new Image.network(
+                          "http://img.youtube.com/vi/" +
+                              getIdFromUrl(_video.reference) +
+                              "/hqdefault.jpg",
+                          fit: BoxFit.cover),
+                    ),
+                    new QuizWidget(questions)
+                  ],
+                ))));
   }
 
   String getIdFromUrl(String url) {
