@@ -8,8 +8,6 @@ import 'package:url_launcher/url_launcher.dart';
 class InformationTabPage extends StatelessWidget implements TabPage {
   static final Text title = const Text("Information");
   static final Icon icon = const Icon(CupertinoIcons.info);
-  final _apiUrl =
-    "http://37.97.185.127:10123/api"; // TODO change this to non-local server once it's up
 
   @override
   Widget build(BuildContext context) {
@@ -105,8 +103,6 @@ class VideoScreen extends StatelessWidget {
   const VideoScreen(this._video);
 
   final Video _video;
-  final _apiUrl =
-      "http://37.97.185.127:10123/api";
 
   @override
   Widget build(BuildContext context) {
