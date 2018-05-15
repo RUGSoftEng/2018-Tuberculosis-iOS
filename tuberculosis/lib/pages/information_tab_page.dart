@@ -1,3 +1,4 @@
+import 'package:Tubuddy/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:Tubuddy/pages/tab_page.dart';
@@ -11,11 +12,25 @@ class InformationTabPage extends StatelessWidget implements TabPage {
 
   @override
   Widget build(BuildContext context) {
-    return new ListView.builder(
-        itemBuilder: (BuildContext context, int index) {
-          return new InfoEntryItem(dummyInfo[index]);
-        },
-        itemCount: 4);
+    return new FutureBuilder<List<String>>(
+      future: api.videos.getTopics(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return new ListView.builder(
+            itemBuilder: (BuildContext context, int index) {
+              return new InfoEntryItem(new InfoEntry(snapshot.data[index]));
+            },
+            itemCount: snapshot.data.length,
+          );
+        }
+        else if (snapshot.hasError) {
+          return new Text("${snapshot.error}");
+        }
+        return new Center(
+          child: new CircularProgressIndicator()
+        );
+      },
+    );
   }
 
   @override
@@ -23,13 +38,6 @@ class InformationTabPage extends StatelessWidget implements TabPage {
     return title;
   }
 }
-
-final List<InfoEntry> dummyInfo = <InfoEntry>[
-  new InfoEntry("General information"),
-  new InfoEntry("Symptoms"),
-  new InfoEntry("Treatment"),
-  new InfoEntry("Other")
-];
 
 class InfoEntry {
   InfoEntry(this.topic);
@@ -50,17 +58,50 @@ class InfoEntryItem extends StatelessWidget {
           Navigator.push(
               context,
               new CupertinoPageRoute(
-                  builder: (context) => new VideoScreen(infoEntry.topic)));
+                  builder: (context) => VideoSelectorScreen(infoEntry.topic)));
         });
   }
 }
 
-class VideoScreen extends StatelessWidget {
-  const VideoScreen(this._topic);
+class VideoSelectorScreen extends StatelessWidget {
+  const VideoSelectorScreen(this._topic);
 
   final String _topic;
-  final _apiUrl =
-      "http://192.168.50.4:2002/api"; // TODO change this to non-local server once it's up
+
+  @override
+  Widget build(BuildContext context) {
+    return new CupertinoPageScaffold(
+        navigationBar: new CupertinoNavigationBar(
+        middle: new Text(_topic),
+      ),
+      child: new FutureBuilder<List<Video>>(
+        future: api.videos.getVideos(_topic),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Material(child: ListView(children: snapshot.data.map((v) => ListTile(
+              title: Text(v.title),
+              onTap: () => Navigator.push(
+                  context,
+                  new CupertinoPageRoute(
+                      builder: (context) => VideoScreen(v)
+                  )
+              ),
+            )).toList(),));
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          } else {
+            return Center(child: new CircularProgressIndicator(),);
+          }
+        }
+      )
+    );
+  }
+}
+
+class VideoScreen extends StatelessWidget {
+  const VideoScreen(this._video);
+
+  final Video _video;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +116,7 @@ class VideoScreen extends StatelessWidget {
     ];
     return new CupertinoPageScaffold(
         navigationBar: new CupertinoNavigationBar(
-          middle: new Text(_topic),
+          middle: new Text(_video.title),
         ),
         child: new Material(
             child: new SafeArea(
@@ -89,47 +130,22 @@ class VideoScreen extends StatelessWidget {
                               "/hqdefault.jpg",
                           fit: BoxFit.cover),
                     ),
-//                    new Expanded(child: new GridView.count(
-//                      // Create a grid with 2 columns. If you change the scrollDirection to
-//                      // horizontal, this would produce 2 rows.
-//                      crossAxisCount: 2,
-//                      childAspectRatio: 4.0,
-//                      // Generate 100 Widgets that display their index in the List
-//                      children: new List.generate(100, (index) {
-//                        return new Center(
-//                          child: new Text(
-//                            'Item $index',
-//                            style: Theme.of(context).textTheme.headline,
-//                          ),
-//                        );
-//                      }),
-//                    )),
                     new QuizWidget(questions)
                   ],
                 ))));
-//                child: new GridView.count(
-//                    primary: false,
-//                    padding: const EdgeInsets.all(20.0),
-//                    crossAxisSpacing: 10.0,
-//                    crossAxisCount: 2,
-//                    children: sampleData.map((String url) {
-//                      return new GridTile(
-//                          child: new GestureDetector(
-//                              onTap: () => _openVideo(url),
-//                              child: new Image.network(
-//                                  "http://img.youtube.com/vi/" +
-//                                      getIdFromUrl(url) +
-//                                      "/hqdefault.jpg",
-//                                  fit: BoxFit.cover)));
-//                    }).toList()))));
+//    return new CupertinoPageScaffold(
+//      navigationBar: CupertinoNavigationBar(
+//        middle: Text(_video.title)
+//      ),
+//      child: GestureDetector(
+//        child: new Image.network("http://img.youtube.com/vi/" + getIdFromUrl(_video.reference) + "/hqdefault.jpg"),
+//        onTap: () => _openVideo(_video.reference),
+//      )
+//    );
   }
 
   String getIdFromUrl(String url) {
-    return url.substring(url.lastIndexOf("=") + 1);
-  }
-
-  void _showSnackbar(BuildContext context, String message) {
-    Scaffold.of(context).showSnackBar(new SnackBar(content: new Text(message)));
+    return url.substring(url.indexOf("?v=") + 3);
   }
 
   _openVideo(String url) async {
