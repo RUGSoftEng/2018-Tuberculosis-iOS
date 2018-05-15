@@ -1,11 +1,9 @@
-import 'dart:convert';
-import 'dart:async';
+import 'package:Tubuddy/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:Tubuddy/pages/tab_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
 
 class InformationTabPage extends StatelessWidget implements TabPage {
   static final Text title = const Text("Information");
@@ -16,7 +14,7 @@ class InformationTabPage extends StatelessWidget implements TabPage {
   @override
   Widget build(BuildContext context) {
     return new FutureBuilder<List<String>>(
-      future: _getTopics(),
+      future: api.videos.getTopics(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return new ListView.builder(
@@ -39,18 +37,6 @@ class InformationTabPage extends StatelessWidget implements TabPage {
   @override
   Text getTitle() {
     return title;
-  }
-
-  Future<List<String>> _getTopics() async {
-    final response = await http.get(_apiUrl + "/general/videos/topics");
-    final responseJson = await json.decode(response.body);
-
-    List<String> topics = [];
-    for (String topic in responseJson) {
-      topics.add(topic);
-    }
-
-    return topics;
   }
 }
 
@@ -92,7 +78,7 @@ class VideoSelectorScreen extends StatelessWidget {
         middle: new Text(_topic),
       ),
       child: new FutureBuilder<List<Video>>(
-        future: _getVideos(),
+        future: api.videos.getVideos(_topic),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Material(child: ListView(children: snapshot.data.map((v) => ListTile(
@@ -111,34 +97,6 @@ class VideoSelectorScreen extends StatelessWidget {
           }
         }
       )
-    );
-  }
-
-  Future<List<Video>> _getVideos() async {
-    final response = await http.get(_apiUrl + "/general/videos/topics/" + _topic);
-    final responseJson = await json.decode(response.body);
-
-    List<Video> videos = [];
-    for (Map video in responseJson) {
-      videos.add(new Video.fromJson(video));
-    }
-
-    return videos;
-  }
-}
-
-class Video {
-  final String topic;
-  final String title;
-  final String reference;
-
-  Video({this.topic, this.title, this.reference});
-
-  factory Video.fromJson(Map<String, dynamic> json) {
-    return new Video(
-      topic: json['topic'],
-      title: json['title'],
-      reference: json['reference']
     );
   }
 }
