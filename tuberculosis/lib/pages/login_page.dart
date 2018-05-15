@@ -1,3 +1,4 @@
+import 'package:Tubuddy/api/api.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'dart:io';
 import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
-  final ValueChanged<bool> _userLoggedIn;
+  final ValueChanged<String> _userLoggedIn;
 
   LoginPage(this._userLoggedIn);
 
@@ -16,11 +17,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-  final ValueChanged<bool> _userLoggedIn;
+  final ValueChanged<String> _userLoggedIn;
   final _formKey = new GlobalKey<FormState>();
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final _apiUrl =
-      "http://192.168.50.4:2002/api"; // TODO change this to non-local server once it's up
   String _username, _password;
   bool _logInButtonDisabled = false;
 
@@ -127,21 +126,27 @@ class LoginPageState extends State<LoginPage> {
   void _handleLogin() async {
     setState(() => _logInButtonDisabled = true);
     if (_username == "demo" && _password == "demo123") {
-      _userLoggedIn(true);
+      _userLoggedIn("");
     } else {
-      http
-          .post(_apiUrl + "/accounts/login",
-              body: json.encode({"username": _username, "password": _password}))
-          .timeout(const Duration(seconds: 5))
-          .then((response) {
-        if (response.statusCode == HttpStatus.OK) {
-          // TODO store received API token somewhere, add blocking spinner.
-          _userLoggedIn(true);
-        } else {
-          _showLogInError("Username or password incorrect.");
-        }
-      }).catchError(
-              (e) => _showLogInError("Error: could not connect to server."));
+      final loginResult = await api.login.doLogin(_username, _password);
+      if (loginResult.success) {
+        _userLoggedIn(loginResult.result.token);
+      } else {
+        _showLogInError("Username or password incorrect.");
+      }
+//      http
+//          .post(_apiUrl + "/accounts/login",
+//              body: json.encode({"username": _username, "password": _password}))
+//          .timeout(const Duration(seconds: 5))
+//          .then((response) {
+//        if (response.statusCode == HttpStatus.OK) {
+//          // TODO store received API token somewhere, add blocking spinner.
+//          _userLoggedIn(true);
+//        } else {
+//          _showLogInError("Username or password incorrect.");
+//        }
+//      }).catchError(
+//              (e) => _showLogInError("Error: could not connect to server."));
     }
   }
 
