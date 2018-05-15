@@ -1,3 +1,4 @@
+import 'package:Tubuddy/pages/medication_tab_page.dart';
 import 'package:Tubuddy/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -55,8 +56,12 @@ class _MyAppState extends State<MyApp> {
               TabPage pageContent;
               switch (index) {
                 case 0:
+                  List<MedicationItem> pills = dummyMedicationData;
+                  if (selectedDate.day != (new DateTime.now()).day) {
+                    pills = [new MedicationItem("Fissa", "Any Time", 1)];
+                  }
                   pageContent = new CalendarTabPage(
-                      selectedDate,
+                      selectedDate, pills,
                           (DateTime date) => setState(() {
                         selectedDate = date;
                       }));
