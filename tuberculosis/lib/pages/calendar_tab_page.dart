@@ -22,12 +22,14 @@ class CalendarTabPage extends StatelessWidget implements TabPage {
   Widget build(BuildContext context) {
     return new Column(children: <Widget>[
       Calendar(isExpandable: true, onDateSelected: onDateSelected),
-      Expanded(child: ListView.builder(
-          itemBuilder: (BuildContext context, int index) {
-            return pills[index];
-          },
-          itemCount: pills.length))
-    ]);
+      Divider(color: CupertinoColors.lightBackgroundGray, height: 5.0),
+      Expanded(
+          child: ListView(
+        children: pills,
+        shrinkWrap: false,
+        padding: EdgeInsets.zero,
+      ))
+    ], mainAxisSize: MainAxisSize.max);
   }
 
   @override
