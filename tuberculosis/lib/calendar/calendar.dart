@@ -188,7 +188,7 @@ class CalendarState extends State<Calendar> {
     final mediaQuery = MediaQuery.of(context);
     return new Padding(
         child: new Column(children: [nameAndIconRow, calendarGridView]),
-        padding: mediaQuery.padding);
+        padding: new EdgeInsets.only(top: mediaQuery.padding.top));
   }
 
   void resetToToday() {

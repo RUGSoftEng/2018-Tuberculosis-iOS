@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:Tubuddy/pages/tab_page.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:Tubuddy/pages/medication_tab_page.dart';
 
 class CalendarTabPage extends StatelessWidget implements TabPage {
   static final title = const Text("Calendar");
@@ -13,12 +14,22 @@ class CalendarTabPage extends StatelessWidget implements TabPage {
 
   final DateTime today;
   final ValueChanged<DateTime> onDateSelected;
+  final List<MedicationItem> pills;
 
-  CalendarTabPage(this.today, [this.onDateSelected]);
+  CalendarTabPage(this.today, this.pills, [this.onDateSelected]);
 
   @override
   Widget build(BuildContext context) {
-    return new Calendar(isExpandable: true, onDateSelected: onDateSelected);
+    return new Column(children: <Widget>[
+      Calendar(isExpandable: true, onDateSelected: onDateSelected),
+      Divider(color: CupertinoColors.lightBackgroundGray, height: 5.0),
+      Expanded(
+          child: ListView(
+        children: pills,
+        shrinkWrap: false,
+        padding: EdgeInsets.zero,
+      ))
+    ], mainAxisSize: MainAxisSize.max);
   }
 
   @override

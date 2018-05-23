@@ -2,6 +2,7 @@ name: Tubuddy
 description: Software Engineering
 
 dependencies:
+  shared_preferences: "^0.4.1"
   flutter:
     sdk: flutter
 

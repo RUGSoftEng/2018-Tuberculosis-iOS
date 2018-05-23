@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'package:Tubuddy/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   // Disable rotation
@@ -17,7 +19,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   DateTime selectedDate;
-  bool _userLoggedIn = false; // replace with actual check in the future.
+  bool _userLoggedIn = false;
+  String _userToken = "";
 
   _MyAppState() : selectedDate = new DateTime.now();
 
@@ -55,8 +58,12 @@ class _MyAppState extends State<MyApp> {
               TabPage pageContent;
               switch (index) {
                 case 0:
+                  List<MedicationItem> pills = dummyMedicationData;
+                  if (selectedDate.day != (new DateTime.now()).day) {
+                    pills = [new MedicationItem("Fissa", "Any Time", 1)];
+                  }
                   pageContent = new CalendarTabPage(
-                      selectedDate,
+                      selectedDate, pills,
                           (DateTime date) => setState(() {
                         selectedDate = date;
                       }));
@@ -77,7 +84,18 @@ class _MyAppState extends State<MyApp> {
               }
               return new CupertinoPageScaffold(
                   navigationBar: new CupertinoNavigationBar(
-                      middle: pageContent.getTitle()),
+                    middle: pageContent.getTitle(),
+                    trailing: GestureDetector(
+                      child: Icon(Icons.exit_to_app),
+                      onTap: () async {
+                        await setUserToken("");
+                        setState(() {
+                          _userLoggedIn = false;
+                          _userToken = "";
+                        });
+                      },
+                    ),
+                  ),
                   child: new Material(child: pageContent));
             },
           ),
@@ -86,20 +104,44 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  Future<bool> setUserToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (token == "") {
+      return prefs.remove("user_token");
+    }
+    return prefs.setString("user_token", token);
+  }
+
+  Future<String> getExistingUserToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString("user_token");
+  }
+
   Widget getPage() {
     if (_userLoggedIn) {
       return getLoggedInPage();
     } else {
-      return new LoginPage((bool loggedIn) => setState(() {
-        _userLoggedIn = loggedIn;
-      }));
+      return new LoginPage((String token) {
+        setUserToken(token);
+
+        setState(() {
+          _userLoggedIn = true;
+          _userToken = token;
+        });
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      home: getPage()
-    );
+    return new FutureBuilder(builder: (context, state) {
+      if (state.connectionState != ConnectionState.waiting && state.data != null && state.data != "") {
+        _userToken = state.data;
+        _userLoggedIn = true;
+      }
+      return new MaterialApp(
+          home: getPage()
+      );
+    }, future: getExistingUserToken(),);
   }
 }
