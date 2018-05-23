@@ -63,10 +63,11 @@ class _MyAppState extends State<MyApp> {
                     pills = [new MedicationItem("Fissa", "Any Time", 1)];
                   }
                   pageContent = new CalendarTabPage(
-                      selectedDate, pills,
-                          (DateTime date) => setState(() {
-                        selectedDate = date;
-                      }));
+                      selectedDate,
+                      pills,
+                      (DateTime date) => setState(() {
+                            selectedDate = date;
+                          }));
                   break;
                 case 1:
                   List<MedicationItem> pills = dummyMedicationData;
@@ -86,15 +87,24 @@ class _MyAppState extends State<MyApp> {
                   navigationBar: new CupertinoNavigationBar(
                     middle: pageContent.getTitle(),
                     trailing: GestureDetector(
-                      child: Icon(Icons.exit_to_app),
-                      onTap: () async {
-                        await setUserToken("");
-                        setState(() {
-                          _userLoggedIn = false;
-                          _userToken = "";
-                        });
-                      },
-                    ),
+                        child: Icon(
+                            IconData(0xf43c,
+                                fontFamily: 'CupertinoIcons',
+                                fontPackage: 'cupertino_icons'),
+                            size: 28.0,
+                            color: CupertinoColors.black),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              new CupertinoPageRoute(
+                                  builder: (context) =>
+                                      SettingsPage(() => setState(() {
+                                            setUserToken("").then((result) {
+                                              _userToken = "";
+                                              _userLoggedIn = false;
+                                            });
+                                          }))));
+                        }),
                   ),
                   child: new Material(child: pageContent));
             },
@@ -117,11 +127,11 @@ class _MyAppState extends State<MyApp> {
     return prefs.getString("user_token");
   }
 
-  Widget getPage() {
+  Widget getPage(BuildContext context) {
     if (_userLoggedIn) {
       return getLoggedInPage();
     } else {
-      return new LoginPage((String token) {
+      return LoginPage((String token) {
         setUserToken(token);
 
         setState(() {
@@ -134,14 +144,17 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return new FutureBuilder(builder: (context, state) {
-      if (state.connectionState != ConnectionState.waiting && state.data != null && state.data != "") {
-        _userToken = state.data;
-        _userLoggedIn = true;
-      }
-      return new MaterialApp(
-          home: getPage()
-      );
-    }, future: getExistingUserToken(),);
+    return new FutureBuilder(
+      builder: (context, state) {
+        if (state.connectionState != ConnectionState.waiting &&
+            state.data != null &&
+            state.data != "") {
+          _userToken = state.data;
+          _userLoggedIn = true;
+        }
+        return new MaterialApp(home: getPage(context));
+      },
+      future: getExistingUserToken(),
+    );
   }
 }
