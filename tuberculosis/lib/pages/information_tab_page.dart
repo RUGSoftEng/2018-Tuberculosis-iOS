@@ -1,4 +1,5 @@
 import 'package:Tubuddy/api/api.dart';
+import 'package:Tubuddy/api/fetch_data_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:Tubuddy/pages/tab_page.dart';
@@ -12,24 +13,16 @@ class InformationTabPage extends StatelessWidget implements TabPage {
 
   @override
   Widget build(BuildContext context) {
-    return new FutureBuilder<List<String>>(
-      future: api.videos.getTopics(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return new ListView.builder(
-            itemBuilder: (BuildContext context, int index) {
-              return new InfoEntryItem(new InfoEntry(snapshot.data[index]));
-            },
-            itemCount: snapshot.data.length,
-          );
-        }
-        else if (snapshot.hasError) {
-          return new Text("${snapshot.error}");
-        }
-        return new Center(
-          child: new CircularProgressIndicator()
+    return FetchDataWidget(
+      getFutureFunction: api.videos.getTopics,
+      builder: (context, data) {
+        return new ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            return new InfoEntryItem(new InfoEntry(data[index]));
+          },
+          itemCount: data.length,
         );
-      },
+      }
     );
   }
 
@@ -74,25 +67,19 @@ class VideoSelectorScreen extends StatelessWidget {
         navigationBar: new CupertinoNavigationBar(
         middle: new Text(_topic),
       ),
-      child: new FutureBuilder<List<Video>>(
-        future: api.videos.getVideos(_topic),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Material(child: ListView(children: snapshot.data.map((v) => ListTile(
-              title: Text(v.title),
-              onTap: () => Navigator.push(
-                  context,
-                  new CupertinoPageRoute(
-                      builder: (context) => VideoScreen(v)
-                  )
-              ),
-            )).toList(),));
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          } else {
-            return Center(child: new CircularProgressIndicator(),);
-          }
-        }
+      child: FetchDataWidget<List<Video>>(
+        getFutureFunction: () => api.videos.getVideos(_topic),
+        builder: (context, data) {
+          return Material(child: ListView(children: data.map((v) => ListTile(
+            title: Text(v.title),
+            onTap: () => Navigator.push(
+                context,
+                new CupertinoPageRoute(
+                    builder: (context) => VideoScreen(v)
+                )
+            ),
+          )).toList(),));
+        },
       )
     );
   }
