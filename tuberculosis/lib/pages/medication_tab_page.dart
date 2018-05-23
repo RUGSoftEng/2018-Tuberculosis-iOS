@@ -21,7 +21,7 @@ class MedicationTabPage extends StatelessWidget implements TabPage {
   }
 
   @override
-  Text getTitle() {
+  Text getTitle(BuildContext context) {
     return title;
   }
 }

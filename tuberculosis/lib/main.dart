@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:Tubuddy/translated_app.dart';
+import 'package:tuple/tuple.dart';
 
 void main() {
   // Disable rotation
@@ -30,7 +32,7 @@ class _MyAppState extends State<MyApp> {
         items: <BottomNavigationBarItem>[
           new BottomNavigationBarItem(
             icon: CalendarTabPage.icon,
-            title: CalendarTabPage.title,
+            title: Text('Calendar'),
           ),
           new BottomNavigationBarItem(
             icon: MedicationTabPage.icon,
@@ -84,7 +86,7 @@ class _MyAppState extends State<MyApp> {
               }
               return new CupertinoPageScaffold(
                   navigationBar: new CupertinoNavigationBar(
-                    middle: pageContent.getTitle(),
+                    middle: pageContent.getTitle(context),
                     trailing: GestureDetector(
                       child: Icon(Icons.exit_to_app),
                       onTap: () async {
@@ -112,9 +114,11 @@ class _MyAppState extends State<MyApp> {
     return prefs.setString("user_token", token);
   }
 
-  Future<String> getExistingUserToken() async {
+  Future<Tuple2<String, String>> getStartupData() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString("user_token");
+    final lang = prefs.getString('selected_language');
+    final token = prefs.getString("user_token");
+    return Tuple2(token, lang);
   }
 
   Widget getPage() {
@@ -136,12 +140,13 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return new FutureBuilder(builder: (context, state) {
       if (state.connectionState != ConnectionState.waiting && state.data != null && state.data != "") {
-        _userToken = state.data;
+        _userToken = state.data.item1;
         _userLoggedIn = true;
       }
-      return new MaterialApp(
-          home: getPage()
+      return TranslatedApp(
+        language: '',
+        home: getPage(),
       );
-    }, future: getExistingUserToken(),);
+    }, future: getStartupData(),);
   }
 }

@@ -1,0 +1,10 @@
+{
+  "@@locale": "en",
+  "@@last_modified": "2018-05-23T11:31:36.140713",
+    "calendarTitle": "Calendar",
+    "@calendarTitle": {
+      "description": "Title for calendar tab",
+      "type": "text",
+      "placeholders": {}
+    }
+}
