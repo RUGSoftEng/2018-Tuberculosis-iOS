@@ -1,3 +1,4 @@
+import 'package:Tubuddy/tubuddy_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:Tubuddy/pages/tab_page.dart';
@@ -6,6 +7,10 @@ import 'package:flutter/cupertino.dart';
 class MedicationTabPage extends StatelessWidget implements TabPage {
   static final Text title = const Text("Medication");
   static final Icon icon = const Icon(CupertinoIcons.book);
+
+  static String getTitleStatic(BuildContext context) {
+    return TubuddyStrings.of(context).medicationTitle;
+  }
 
   final List<MedicationItem> pills;
 
@@ -22,7 +27,7 @@ class MedicationTabPage extends StatelessWidget implements TabPage {
 
   @override
   Text getTitle(BuildContext context) {
-    return title;
+    return Text(MedicationTabPage.getTitleStatic(context));
   }
 }
 
@@ -43,9 +48,7 @@ class MedicationItem extends StatelessWidget {
     return new ListTile(
         leading: const Icon(Icons.healing),
         title: new Text(this.medicationName),
-        subtitle: recommendedDosage != 1
-          ? new Text(recommendedTime + " - " + recommendedDosage.toString() + " pills")
-          : new Text(recommendedTime + " - " + recommendedDosage.toString() + " pill")
+        subtitle: new Text(recommendedTime + " - " + recommendedDosage.toString() + ' ' + TubuddyStrings.of(context).pillText(recommendedDosage))
     );
   }
 }

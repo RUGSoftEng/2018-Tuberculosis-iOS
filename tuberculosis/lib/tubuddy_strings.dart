@@ -50,26 +50,97 @@ class TubuddyStrings {
     locale: _localeName
   );
 
-//  String title() {
-//    return Intl.message(
-//      '<Stocks>',
-//      name: 'title',
-//      desc: 'Title for the Stocks application',
-//      locale: _localeName,
-//    );
-//  }
-//
-//  String market() => Intl.message(
-//    'MARKET',
-//    name: 'market',
-//    desc: 'Label for the Market tab',
-//    locale: _localeName,
-//  );
-//
-//  String portfolio() => Intl.message(
-//    'PORTFOLIO',
-//    name: 'portfolio',
-//    desc: 'Label for the Portfolio tab',
-//    locale: _localeName,
-//  );
+  String get faqTitle => Intl.message(
+      'FAQ',
+      name: 'faqTitle',
+      desc: 'Title for faq tab',
+      locale: _localeName
+  );
+
+  String get informationTitle => Intl.message(
+      'Information',
+      name: 'informationTitle',
+      desc: 'Title for information tab',
+      locale: _localeName
+  );
+
+  String get medicationTitle => Intl.message(
+      'Medication',
+      name: 'medicationTitle',
+      desc: 'Title for medication tab',
+      locale: _localeName
+  );
+
+  String get welcomeText => Intl.message(
+      'Welcome to Tubuddy!',
+      name: 'welcomeText',
+      desc: 'Welcome text on login page',
+      locale: _localeName
+  );
+
+  String get loginBtnText => Intl.message(
+      'Log In',
+      name: 'loginBtnText',
+      desc: 'Login button text',
+      locale: _localeName
+  );
+
+  String get loginBtnInProgressText => Intl.message(
+      'Logging In...',
+      name: 'loginBtnInProgressText',
+      desc: 'Login (in progress) button text',
+      locale: _localeName
+  );
+
+  String get forgotPasswordBtnText => Intl.message(
+      'Forgotten Password',
+      name: 'forgotPasswordBtnText',
+      desc: 'Forgotton password button text',
+      locale: _localeName
+  );
+
+  String get loginMissingPassword => Intl.message(
+      'Please enter a password',
+      name: 'loginMissingPassword',
+      desc: 'Error message displayed when the user forgets to fill in a password',
+      locale: _localeName
+  );
+
+  String get loginMissingUsername => Intl.message(
+      'Please enter a username',
+      name: 'loginMissingUsername',
+      desc: 'Error message displayed when the user forgets to fill in a username',
+      locale: _localeName
+  );
+
+  String get loginIncorrectCredentials => Intl.message(
+      'Username or password incorrect.',
+      name: 'loginIncorrectCredentials',
+      desc: 'Error message displayed when the user provides invalid credentials',
+      locale: _localeName
+  );
+
+  String pillText(int howMany) => Intl.plural(
+    howMany,
+    one: 'pill',
+    many: 'pills',
+    other: 'pills',
+    name: 'pillText',
+    args: [howMany],
+    desc: 'Text for "pill" singular and plural.'
+  );
+
+  String get username => Intl.message(
+      'Username',
+    name: 'username',
+    desc: 'Username field on login page',
+    locale: _localeName
+  );
+
+  String get password => Intl.message(
+      'Password',
+      name: 'password',
+      desc: 'Password field on login page',
+      locale: _localeName
+  );
 }

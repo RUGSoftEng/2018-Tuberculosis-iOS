@@ -17,8 +17,21 @@ typedef MessageIfAbsent(String message_str, List args);
 class MessageLookup extends MessageLookupByLibrary {
   get localeName => 'nl';
 
+  static m0(howMany) => "${Intl.plural(howMany, one: 'pil', many: 'pillen', other: 'pillen')}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "calendarTitle" : MessageLookupByLibrary.simpleMessage("Kalender")
+    "calendarTitle" : MessageLookupByLibrary.simpleMessage("Kalender"),
+    "faqTitle" : MessageLookupByLibrary.simpleMessage("FAQ"),
+    "forgotPasswordBtnText" : MessageLookupByLibrary.simpleMessage("Wachtwoord Vergeten"),
+    "informationTitle" : MessageLookupByLibrary.simpleMessage("Informatie"),
+    "loginBtnInProgressText" : MessageLookupByLibrary.simpleMessage("Aan het inloggen..."),
+    "loginBtnText" : MessageLookupByLibrary.simpleMessage("Log In"),
+    "loginIncorrectCredentials" : MessageLookupByLibrary.simpleMessage("Gebruikersnaam of wachtwoord incorrect."),
+    "loginMissingPassword" : MessageLookupByLibrary.simpleMessage("Vul een wachtwoord in"),
+    "loginMissingUsername" : MessageLookupByLibrary.simpleMessage("Vul een gebruikersnaam in"),
+    "medicationTitle" : MessageLookupByLibrary.simpleMessage("Medicatie"),
+    "pillText" : m0,
+    "welcomeText" : MessageLookupByLibrary.simpleMessage("Welkom bij Tubuddy!")
   };
 }

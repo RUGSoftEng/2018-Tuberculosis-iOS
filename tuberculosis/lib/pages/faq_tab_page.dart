@@ -1,3 +1,4 @@
+import 'package:Tubuddy/tubuddy_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:Tubuddy/pages/tab_page.dart';
@@ -6,6 +7,10 @@ import 'package:flutter/cupertino.dart';
 class FaqTabPage extends StatelessWidget implements TabPage {
   static final Text title = const Text("FAQ");
   static final Icon icon = const Icon(CupertinoIcons.conversation_bubble);
+
+  static String getTitleStatic(BuildContext context) {
+    return TubuddyStrings.of(context).faqTitle;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,7 @@ class FaqTabPage extends StatelessWidget implements TabPage {
 
   @override
   Text getTitle(BuildContext context) {
-    return title;
+    return Text(FaqTabPage.getTitleStatic(context));
   }
 }
 

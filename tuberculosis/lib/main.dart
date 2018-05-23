@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:Tubuddy/pages/pages.dart';
+import 'package:Tubuddy/tubuddy_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -26,25 +27,25 @@ class _MyAppState extends State<MyApp> {
 
   _MyAppState() : selectedDate = new DateTime.now();
 
-  Widget getLoggedInPage() {
+  Widget getLoggedInPage(BuildContext context) {
     return new CupertinoTabScaffold(
       tabBar: new CupertinoTabBar(
         items: <BottomNavigationBarItem>[
           new BottomNavigationBarItem(
             icon: CalendarTabPage.icon,
-            title: Text('Calendar'),
+            title: Text(TubuddyStrings.of(context).calendarTitle),
           ),
           new BottomNavigationBarItem(
             icon: MedicationTabPage.icon,
-            title: MedicationTabPage.title,
+            title: Text(TubuddyStrings.of(context).medicationTitle),
           ),
           new BottomNavigationBarItem(
             icon: InformationTabPage.icon,
-            title: InformationTabPage.title,
+            title: Text(TubuddyStrings.of(context).informationTitle),
           ),
           new BottomNavigationBarItem(
             icon: FaqTabPage.icon,
-            title: FaqTabPage.title,
+            title: Text(TubuddyStrings.of(context).faqTitle),
           ),
         ],
       ),
@@ -114,16 +115,14 @@ class _MyAppState extends State<MyApp> {
     return prefs.setString("user_token", token);
   }
 
-  Future<Tuple2<String, String>> getStartupData() async {
+  Future<String> getUserToken() async {
     final prefs = await SharedPreferences.getInstance();
-    final lang = prefs.getString('selected_language');
-    final token = prefs.getString("user_token");
-    return Tuple2(token, lang);
+    return prefs.getString("user_token");
   }
 
-  Widget getPage() {
+  Widget getPage(BuildContext context) {
     if (_userLoggedIn) {
-      return getLoggedInPage();
+      return getLoggedInPage(context);
     } else {
       return new LoginPage((String token) {
         setUserToken(token);
@@ -139,14 +138,17 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return new FutureBuilder(builder: (context, state) {
-      if (state.connectionState != ConnectionState.waiting && state.data != null && state.data != "") {
-        _userToken = state.data.item1;
-        _userLoggedIn = true;
+      if (state.connectionState == ConnectionState.waiting) {
+        return TranslatedApp(language: '', home: CircularProgressIndicator());
+      } else {
+        if (state.data != null && state.data != "") {
+          _userToken = state.data;
+          _userLoggedIn = true;
+        }
+        return TranslatedApp(
+          homeBuilder: getPage,
+        );
       }
-      return TranslatedApp(
-        language: '',
-        home: getPage(),
-      );
-    }, future: getStartupData(),);
+    }, future: getUserToken(),);
   }
 }

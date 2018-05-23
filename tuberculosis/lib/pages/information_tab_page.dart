@@ -1,5 +1,6 @@
 import 'package:Tubuddy/api/api.dart';
 import 'package:Tubuddy/api/fetch_data_widget.dart';
+import 'package:Tubuddy/tubuddy_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:Tubuddy/pages/tab_page.dart';
@@ -10,6 +11,10 @@ import 'package:Tubuddy/quiz/quiz.dart';
 class InformationTabPage extends StatelessWidget implements TabPage {
   static final Text title = const Text("Information");
   static final Icon icon = const Icon(CupertinoIcons.info);
+
+  static String getTitleStatic(BuildContext context) {
+    return TubuddyStrings.of(context).informationTitle;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +33,7 @@ class InformationTabPage extends StatelessWidget implements TabPage {
 
   @override
   Text getTitle(BuildContext context) {
-    return title;
+    return Text(InformationTabPage.getTitleStatic(context));
   }
 }
 

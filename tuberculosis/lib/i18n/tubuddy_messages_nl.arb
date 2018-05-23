@@ -1,10 +1,78 @@
 {
   "@@locale": "nl",
-  "@@last_modified": "2018-05-23T11:31:36.140713",
-    "calendarTitle": "Kalender",
-    "@calendarTitle": {
-      "description": "Title for calendar tab",
-      "type": "text",
-      "placeholders": {}
+  "@@last_modified": "2018-05-23T14:46:44.436771",
+  "calendarTitle": "Kalender",
+  "@calendarTitle": {
+    "description": "Title for calendar tab",
+    "type": "text",
+    "placeholders": {}
+  },
+  "faqTitle": "FAQ",
+  "@faqTitle": {
+    "description": "Title for faq tab",
+    "type": "text",
+    "placeholders": {}
+  },
+  "informationTitle": "Informatie",
+  "@informationTitle": {
+    "description": "Title for information tab",
+    "type": "text",
+    "placeholders": {}
+  },
+  "medicationTitle": "Medicatie",
+  "@medicationTitle": {
+    "description": "Title for medication tab",
+    "type": "text",
+    "placeholders": {}
+  },
+  "welcomeText": "Welkom bij Tubuddy!",
+  "@welcomeText": {
+    "description": "Welcome text on login page",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginBtnText": "Log In",
+  "@loginBtnText": {
+    "description": "Login button text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginBtnInProgressText": "Aan het inloggen...",
+  "@loginBtnInProgressText": {
+    "description": "Login (in progress) button text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "forgotPasswordBtnText": "Wachtwoord Vergeten",
+  "@forgotPasswordBtnText": {
+    "description": "Forgotton password button text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginMissingPassword": "Vul een wachtwoord in",
+  "@loginMissingPassword": {
+    "description": "Error message displayed when the user forgets to fill in a password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginMissingUsername": "Vul een gebruikersnaam in",
+  "@loginMissingUsername": {
+    "description": "Error message displayed when the user forgets to fill in a username",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginIncorrectCredentials": "Gebruikersnaam of wachtwoord incorrect.",
+  "@loginIncorrectCredentials": {
+    "description": "Error message displayed when the user provides invalid credentials",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pillText": "{howMany,plural, =1{pil}many{pillen}other{pillen}}",
+  "@pillText": {
+    "description": "Text for \"pill\" singular and plural.",
+    "type": "text",
+    "placeholders": {
+      "howMany": {}
     }
+  }
 }
