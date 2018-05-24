@@ -5,14 +5,20 @@
 // are correct.
 
 import 'package:Tubuddy/main.dart';
+import 'package:Tubuddy/pages/login_page.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('Login page enabled test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(new MyApp());
-
-    // Verify that the login page is the first view (and thus is enabled).
-    expect(find.text("Welcome to Tubuddy!"), findsOneWidget);
-  });
+//  testWidgets('Test translations', (WidgetTester tester) async {
+//    // Build our app and trigger a frame.
+//    await tester.pumpWidget(new MaterialApp(
+//      home: new LoginPage(
+//        (str) {} // Provide empty callback
+//      ),
+//    ));
+//
+//    // Verify that the login page is the first view (and thus is enabled).
+//    expect(find.text("Welcome to Tubuddy!"), findsOneWidget);
+//  });
 }
