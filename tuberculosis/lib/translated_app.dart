@@ -35,7 +35,6 @@ class TranslatedApp extends StatefulWidget {
 
 class TranslatedAppState extends State<TranslatedApp> {
   String language;
-  bool ready = false;
 
   TranslatedAppState(this.language);
 
@@ -47,7 +46,6 @@ class TranslatedAppState extends State<TranslatedApp> {
 
     setState(() {
       this.language = language;
-      this.ready = true;
     });
   }
 
@@ -83,15 +81,13 @@ class TranslatedAppState extends State<TranslatedApp> {
             child: new FutureBuilder(
               builder: (context, snapshot) {
                 Widget body;
-                if (!ready || snapshot.data == null) {
-                  body = Center(child: CircularProgressIndicator());
-                } else if (widget.homeBuilder != null) {
+                if (widget.homeBuilder != null) {
                   body = widget.homeBuilder(context);
                 } else {
                   body = widget.home;
                 }
 
-                if (!ready && snapshot.connectionState != ConnectionState.waiting) {
+                if (snapshot.connectionState != ConnectionState.waiting) {
                   TranslationLanguage.of(context).changeLanguage(snapshot.data);
                 }
 

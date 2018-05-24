@@ -138,17 +138,13 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return new FutureBuilder(builder: (context, state) {
-      if (state.connectionState == ConnectionState.waiting) {
-        return TranslatedApp(language: '', home: CircularProgressIndicator());
-      } else {
-        if (state.data != null && state.data != "") {
+        if (state.connectionState == ConnectionState.done && state.data != null && state.data != "") {
           _userToken = state.data;
           _userLoggedIn = true;
         }
         return TranslatedApp(
           homeBuilder: getPage,
         );
-      }
     }, future: getUserToken(),);
   }
 }
