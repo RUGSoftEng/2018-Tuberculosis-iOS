@@ -1,14 +1,16 @@
 import 'dart:async';
 import 'package:Tubuddy/pages/pages.dart';
+import 'package:Tubuddy/tubuddy_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:Tubuddy/translated_app.dart';
+import 'package:tuple/tuple.dart';
 
 void main() {
   // Disable rotation
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(new MyApp());
 }
 
@@ -19,30 +21,28 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   DateTime selectedDate;
-  bool _userLoggedIn = false;
-  String _userToken = "";
 
   _MyAppState() : selectedDate = new DateTime.now();
 
-  Widget getLoggedInPage() {
+  Widget getLoggedInPage(BuildContext context) {
     return new CupertinoTabScaffold(
       tabBar: new CupertinoTabBar(
         items: <BottomNavigationBarItem>[
           new BottomNavigationBarItem(
             icon: CalendarTabPage.icon,
-            title: CalendarTabPage.title,
+            title: Text(TubuddyStrings.of(context).calendarTitle),
           ),
           new BottomNavigationBarItem(
             icon: MedicationTabPage.icon,
-            title: MedicationTabPage.title,
+            title: Text(TubuddyStrings.of(context).medicationTitle),
           ),
           new BottomNavigationBarItem(
             icon: InformationTabPage.icon,
-            title: InformationTabPage.title,
+            title: Text(TubuddyStrings.of(context).informationTitle),
           ),
           new BottomNavigationBarItem(
             icon: FaqTabPage.icon,
-            title: FaqTabPage.title,
+            title: Text(TubuddyStrings.of(context).faqTitle),
           ),
         ],
       ),
@@ -85,25 +85,20 @@ class _MyAppState extends State<MyApp> {
               }
               return new CupertinoPageScaffold(
                   navigationBar: new CupertinoNavigationBar(
-                    middle: pageContent.getTitle(),
+                    middle: pageContent.getTitle(context),
                     trailing: GestureDetector(
-                        child: Icon(
-                            IconData(0xf43c,
-                                fontFamily: 'CupertinoIcons',
-                                fontPackage: 'cupertino_icons'),
-                            size: 28.0,
-                            color: CupertinoColors.black),
+                        child: Icon(IconData(0xf43c, fontFamily: 'CupertinoIcons', fontPackage: 'cupertino_icons'),
+                            size: 28.0, color: CupertinoColors.black),
                         onTap: () {
                           Navigator.push(
                               context,
                               new CupertinoPageRoute(
-                                  builder: (context) =>
-                                      SettingsPage(() => setState(() {
-                                            setUserToken("").then((result) {
-                                              _userToken = "";
-                                              _userLoggedIn = false;
-                                            });
-                                          }))));
+                                  builder: (context) => SettingsPage(() async {
+                                        await (userSettings.currentState as TranslatedAppState).setUserToken("");
+                                        // DO NOT REMOVE THE FOLLOWING LINE
+                                        // This triggers an update of this widget as it does not happen automatically.
+                                        setState(() {});
+                                      })));
                         }),
                   ),
                   child: new Material(child: pageContent));
@@ -114,47 +109,24 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Future<bool> setUserToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    if (token == "") {
-      return prefs.remove("user_token");
-    }
-    return prefs.setString("user_token", token);
-  }
-
-  Future<String> getExistingUserToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString("user_token");
-  }
-
   Widget getPage(BuildContext context) {
-    if (_userLoggedIn) {
-      return getLoggedInPage();
-    } else {
-      return LoginPage((String token) {
-        setUserToken(token);
+    final state = UserSettings.of(context);
+    final _userLoggedIn = (state != null && state.userToken != null && state.userToken.isNotEmpty);
 
-        setState(() {
-          _userLoggedIn = true;
-          _userToken = token;
-        });
+    if (_userLoggedIn) {
+      return getLoggedInPage(context);
+    } else {
+      return new LoginPage((String token) {
+        (userSettings.currentState as TranslatedAppState).setUserToken(token);
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return new FutureBuilder(
-      builder: (context, state) {
-        if (state.connectionState != ConnectionState.waiting &&
-            state.data != null &&
-            state.data != "") {
-          _userToken = state.data;
-          _userLoggedIn = true;
-        }
-        return new MaterialApp(home: getPage(context));
-      },
-      future: getExistingUserToken(),
+    return TranslatedApp(
+      key: userSettings,
+      homeBuilder: getPage,
     );
   }
 }

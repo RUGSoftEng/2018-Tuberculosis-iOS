@@ -1,4 +1,5 @@
 import 'package:Tubuddy/api/api.dart';
+import 'package:Tubuddy/tubuddy_strings.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ class LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return new CupertinoPageScaffold(
             navigationBar: new CupertinoNavigationBar(
-                middle: const Text("Welcome to Tubuddy!")),
+                middle: Text(TubuddyStrings.of(context).welcomeText)),
             child: new Scaffold(
                 key: _scaffoldKey,
                 body: new DefaultTextStyle(
@@ -54,7 +55,7 @@ class LoginPageState extends State<LoginPage> {
 
     final usernameField = new TextFormField(
       decoration: new InputDecoration(
-          hintText: "Username",
+          hintText: TubuddyStrings.of(context).username,
           contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           border: new OutlineInputBorder(
               borderRadius: new BorderRadius.circular(32.0))),
@@ -66,7 +67,7 @@ class LoginPageState extends State<LoginPage> {
 
     final passwordField = new TextFormField(
       decoration: new InputDecoration(
-          hintText: "Password",
+          hintText: TubuddyStrings.of(context).password,
           contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           border: new OutlineInputBorder(
               borderRadius: new BorderRadius.circular(32.0))),
@@ -77,11 +78,11 @@ class LoginPageState extends State<LoginPage> {
 
     final loginButton = new CupertinoButton(
         onPressed: _logInButtonDisabled ? null : _processForm,
-        child: new Text(_logInButtonDisabled ? "Logging In..." : "Log In"));
+        child: new Text(_logInButtonDisabled ? TubuddyStrings.of(context).loginBtnInProgressText : TubuddyStrings.of(context).loginBtnText));
 
     final forgottenPasswordButton = new CupertinoButton(
-        child: const Text(
-          "Forgotten Password",
+        child: Text(
+          TubuddyStrings.of(context).forgotPasswordBtnText,
           style: const TextStyle(color: Colors.black45),
         ),
         onPressed: () => _showInSnackbar(
@@ -105,12 +106,12 @@ class LoginPageState extends State<LoginPage> {
   }
 
   String _validatePassword(String val) {
-    if (val.isEmpty) return "Please enter a password.";
+    if (val.isEmpty) return TubuddyStrings.of(context).loginMissingPassword;
     return null;
   }
 
   String _validateUsername(String val) {
-    if (val.isEmpty) return "Please enter a username.";
+    if (val.isEmpty) return TubuddyStrings.of(context).loginMissingUsername;
     return null;
   }
 
@@ -132,7 +133,7 @@ class LoginPageState extends State<LoginPage> {
       if (loginResult.success) {
         _userLoggedIn(loginResult.result.token);
       } else {
-        _showLogInError("Username or password incorrect.");
+        _showLogInError(TubuddyStrings.of(context).loginIncorrectCredentials);
       }
 //      http
 //          .post(_apiUrl + "/accounts/login",
