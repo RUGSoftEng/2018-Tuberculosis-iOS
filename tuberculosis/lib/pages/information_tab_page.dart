@@ -123,7 +123,6 @@ class VideoScreen extends StatelessWidget {
   }
 
   String getIdFromUrl(String url) {
-    url += '&123';
     if (url.startsWith('https://')) {
       url = url.substring('https://'.length);
     }
