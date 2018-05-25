@@ -19,6 +19,12 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(howMany) => "${Intl.plural(howMany, one: 'pil', many: 'pillen', other: 'pillen')}";
 
+  static m1(current, total) => "Vraag ${current}/${total}";
+
+  static m2(correctAnswer) => "Fout. Het goede antwoord is ${correctAnswer}.";
+
+  static m3(correct, total) => "Je had ${correct} vragen van de ${total} goed.";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "calendarTitle" : MessageLookupByLibrary.simpleMessage("Kalender"),
@@ -31,7 +37,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "loginMissingPassword" : MessageLookupByLibrary.simpleMessage("Vul een wachtwoord in"),
     "loginMissingUsername" : MessageLookupByLibrary.simpleMessage("Vul een gebruikersnaam in"),
     "medicationTitle" : MessageLookupByLibrary.simpleMessage("Medicatie"),
+    "password" : MessageLookupByLibrary.simpleMessage("Wachtwoord"),
     "pillText" : m0,
+    "quizQuestionCorrect" : MessageLookupByLibrary.simpleMessage("Goed!"),
+    "quizQuestionProgress" : m1,
+    "quizQuestionWrong" : m2,
+    "quizResult" : m3,
+    "quizTitle" : MessageLookupByLibrary.simpleMessage("Quiz"),
+    "username" : MessageLookupByLibrary.simpleMessage("Gebruikersnaam"),
     "welcomeText" : MessageLookupByLibrary.simpleMessage("Welkom bij Tubuddy!")
   };
 }

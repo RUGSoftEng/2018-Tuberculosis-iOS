@@ -143,4 +143,42 @@ class TubuddyStrings {
       desc: 'Password field on login page',
       locale: _localeName
   );
+
+  String get quizTitle => Intl.message(
+      'Quiz',
+      name: 'quizTitle',
+      desc: 'Quiz',
+      locale: _localeName
+  );
+
+  String get quizQuestionCorrect => Intl.message(
+    'Goed!',
+    name: 'quizQuestionCorrect',
+    desc: 'Text displayed when quiz question is answered correctly',
+    locale: _localeName
+  );
+
+  String quizQuestionWrong(String correctAnswer) => Intl.message(
+    'Fout. Het goede antwoord is $correctAnswer.',
+    name: 'quizQuestionWrong',
+    desc: 'Text displayed when quiz question is answered incorrectly',
+    locale: _localeName,
+    args: [correctAnswer]
+  );
+
+  String quizQuestionProgress(int current, int total) => Intl.message(
+      'Vraag $current/$total',
+      name: 'quizQuestionProgress',
+      desc: 'Progress indication for quiz',
+      locale: _localeName,
+      args: [current, total]
+  );
+
+  String quizResult(int correct, int total) => Intl.message(
+      'Je had $correct vragen van de $total goed.',
+      name: 'quizResult',
+      desc: 'Result indication for quiz',
+      locale: _localeName,
+      args: [correct, total]
+  );
 }

@@ -19,6 +19,12 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(howMany) => "${Intl.plural(howMany, one: 'pill', many: 'pills', other: 'pills')}";
 
+  static m1(current, total) => "Question ${current}/${total}";
+
+  static m2(correctAnswer) => "Incorrect. The correct answer is ${correctAnswer}.";
+
+  static m3(correct, total) => "You answered ${correct}/${total} questions correctly.";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "calendarTitle" : MessageLookupByLibrary.simpleMessage("Calendar"),
@@ -31,7 +37,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "loginMissingPassword" : MessageLookupByLibrary.simpleMessage("Please enter a password"),
     "loginMissingUsername" : MessageLookupByLibrary.simpleMessage("Please enter a username"),
     "medicationTitle" : MessageLookupByLibrary.simpleMessage("Medication"),
+    "password" : MessageLookupByLibrary.simpleMessage("Password"),
     "pillText" : m0,
+    "quizQuestionCorrect" : MessageLookupByLibrary.simpleMessage("Correct!"),
+    "quizQuestionProgress" : m1,
+    "quizQuestionWrong" : m2,
+    "quizResult" : m3,
+    "quizTitle" : MessageLookupByLibrary.simpleMessage("Quiz"),
+    "username" : MessageLookupByLibrary.simpleMessage("Username"),
     "welcomeText" : MessageLookupByLibrary.simpleMessage("Welcome to Tubuddy!")
   };
 }

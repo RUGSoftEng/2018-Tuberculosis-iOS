@@ -74,5 +74,55 @@
     "placeholders": {
       "howMany": {}
     }
-  }
+  },
+  "username": "Username",
+    "@username": {
+      "description": "Username field on login page",
+      "type": "text",
+      "placeholders": {}
+    },
+    "password": "Password",
+    "@password": {
+      "description": "Password field on login page",
+      "type": "text",
+      "placeholders": {}
+    },
+    "quizTitle": "Quiz",
+    "@quizTitle": {
+      "description": "Quiz",
+      "type": "text",
+      "placeholders": {}
+    },
+    "quizQuestionCorrect": "Correct!",
+    "@quizQuestionCorrect": {
+      "description": "Text displayed when quiz question is answered correctly",
+      "type": "text",
+      "placeholders": {}
+    },
+    "quizQuestionWrong": "Incorrect. The correct answer is {correctAnswer}.",
+    "@quizQuestionWrong": {
+      "description": "Text displayed when quiz question is answered incorrectly",
+      "type": "text",
+      "placeholders": {
+        "correctAnswer": {}
+      }
+    },
+    "quizQuestionProgress": "Question {current}/{total}",
+    "@quizQuestionProgress": {
+      "description": "Progress indication for quiz",
+      "type": "text",
+      "placeholders": {
+        "current": {},
+        "total": {}
+      }
+    },
+    "quizResult": "You answered {correct}/{total} questions correctly.",
+    "@quizResult": {
+      "description": "Result indication for quiz",
+      "type": "text",
+      "placeholders": {
+        "correct": {},
+        "total": {}
+      }
+    }
 }

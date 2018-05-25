@@ -9,7 +9,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:Tubuddy/quiz/quiz.dart';
 
 class InformationTabPage extends StatelessWidget implements TabPage {
-  static final Text title = const Text("Information");
   static final Icon icon = const Icon(CupertinoIcons.info);
 
   static String getTitleStatic(BuildContext context) {

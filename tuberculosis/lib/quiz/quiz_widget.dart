@@ -1,4 +1,5 @@
 import 'package:Tubuddy/quiz/question.dart';
+import 'package:Tubuddy/tubuddy_strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ class _QuestionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // Create basic elements (title + question)
     List<Widget> c = [
-      new Center(child: new Text("Quiz", style: Theme.of(context).textTheme.subhead)),
+      new Center(child: new Text(TubuddyStrings.of(context).quizTitle, style: Theme.of(context).textTheme.subhead)),
       new Center(child: new Text(_question.question, style: Theme.of(context).textTheme.headline)),
     ];
     // Add answer input elements
@@ -53,7 +54,7 @@ class _QuizFinished extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Center(child: new Text("Je had $correct vragen van de $total goed.", style: Theme.of(context).textTheme.headline));
+    return new Center(child: new Text(TubuddyStrings.of(context).quizResult(correct, total), style: Theme.of(context).textTheme.headline));
   }
 }
 
@@ -80,10 +81,10 @@ class _QuizState extends State<QuizWidget> {
       if (widget._questions[currentQuestion].correctAnswer == idx) {
         correct++;
         lastQuestionCorrect = true;
-        checkMessage = "Goed!";
+        checkMessage = TubuddyStrings.of(context).quizQuestionCorrect;
       } else {
         lastQuestionCorrect = false;
-        checkMessage = "Fout. Het goede antwoord is ${widget._questions[currentQuestion].answers[widget._questions[currentQuestion].correctAnswer]}";
+        checkMessage = TubuddyStrings.of(context).quizQuestionWrong(widget._questions[currentQuestion].answers[widget._questions[currentQuestion].correctAnswer]);
       }
       showCheckPage = true;
     });
@@ -108,7 +109,7 @@ class _QuizState extends State<QuizWidget> {
     } else {
       return new Expanded(child: new Column(children: [
         new _QuestionWidget(widget._questions[currentQuestion], (i) => _checkAnswer(i)),
-        new Align(alignment: Alignment.bottomCenter, child: new Text("Vraag ${currentQuestion+1}/${widget._questions.length}"))
+        new Align(alignment: Alignment.bottomCenter, child: new Text(TubuddyStrings.of(context).quizQuestionProgress(currentQuestion+1, widget._questions.length)))
       ]));
     }
   }
