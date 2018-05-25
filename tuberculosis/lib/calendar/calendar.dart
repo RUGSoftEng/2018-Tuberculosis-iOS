@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:Tubuddy/flutter_fix/fixed_gridview.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tuple/tuple.dart';
 import 'package:Tubuddy/calendar/calendar_tile.dart';
 import 'package:Tubuddy/calendar/date_utils.dart';
@@ -16,6 +17,7 @@ class Calendar extends StatefulWidget {
   final bool showChevronsToChangeRange;
   final bool showTodayAction;
   final bool showCalendarPickerIcon;
+  final String locale;
 
   Calendar({
     this.onDateSelected,
@@ -25,6 +27,7 @@ class Calendar extends StatefulWidget {
     this.showTodayAction: true,
     this.showChevronsToChangeRange: true,
     this.showCalendarPickerIcon: true,
+    this.locale
   });
 
   @override
@@ -53,7 +56,9 @@ class CalendarState extends State<Calendar> {
         .toList()
         .sublist(0, 7);
     _selectedDate = today;
-    displayMonth = Utils.formatMonth(Utils.firstDayOfWeek(today));
+    Intl.withLocale(widget.locale, () {
+      displayMonth = Utils.formatMonth(Utils.firstDayOfWeek(today));
+    });
   }
 
   Widget get nameAndIconRow {
