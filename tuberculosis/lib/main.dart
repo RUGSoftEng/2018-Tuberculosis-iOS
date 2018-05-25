@@ -22,7 +22,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   DateTime selectedDate;
-  bool _userLoggedIn = false;
 
   _MyAppState() : selectedDate = new DateTime.now();
 
@@ -90,8 +89,11 @@ class _MyAppState extends State<MyApp> {
                     trailing: GestureDetector(
                       child: Icon(Icons.exit_to_app),
                       onTap: () async {
-                        await UserSettings.of(context).setUserToken("");
-                        setState(() => _userLoggedIn = false);
+                        print("log out");
+                        await (userSettings.currentState as TranslatedAppState).setUserToken("");
+                        // DO NOT REMOVE THE FOLLOWING LINE
+                        // This triggers an update of this widget as it does not happen automatically.
+                        setState(() {});
                       },
                     ),
                   ),
@@ -103,44 +105,26 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Future<UserSettingsState> getUserSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userToken = prefs.getString("user_token");
-    final userLanguage = prefs.getString("selected_language");
-
-    return UserSettingsState(userLanguage: userLanguage, userToken: userToken);
-  }
-
   Widget getPage(BuildContext context) {
+    final state = UserSettings.of(context);
+    final _userLoggedIn = (state != null && state.userToken != null && state.userToken.isNotEmpty);
+
+    print("UPDATE!!! " + _userLoggedIn.toString());
+
     if (_userLoggedIn) {
       return getLoggedInPage(context);
     } else {
       return new LoginPage((String token) {
-        UserSettings.of(context).setUserToken(token);
-        setState(() {
-          _userLoggedIn = true;
-        });
+        (userSettings.currentState as TranslatedAppState).setUserToken(token);
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return new FutureBuilder(builder: (context, state) {
-      UserSettingsState us = UserSettingsState();
-      if (state.connectionState == ConnectionState.done) {
-        us = state.data;
-        if (us.userToken != null && us.userToken != '') {
-          _userLoggedIn = true;
-        }
-      }
-
-      return UserSettings(
-        child: TranslatedApp(
-          homeBuilder: getPage,
-        ),
-        data: us
-      );
-    }, future: getUserSettings());
+    return TranslatedApp(
+      key: userSettings,
+      homeBuilder: getPage,
+    );
   }
 }
