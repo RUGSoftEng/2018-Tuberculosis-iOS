@@ -21,8 +21,9 @@ class Video {
 class Videos {
 
   final String _apiUrl;
+  final String _lang;
 
-  Videos(this._apiUrl);
+  Videos(this._apiUrl, this._lang);
 
   Future<List<String>> getTopics() async {
     final response = await http.get(_apiUrl + "/general/videos/topics");

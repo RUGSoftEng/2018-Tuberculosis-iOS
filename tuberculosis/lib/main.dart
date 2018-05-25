@@ -23,7 +23,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   DateTime selectedDate;
   bool _userLoggedIn = false;
-  String _userToken = "";
 
   _MyAppState() : selectedDate = new DateTime.now();
 
@@ -91,11 +90,8 @@ class _MyAppState extends State<MyApp> {
                     trailing: GestureDetector(
                       child: Icon(Icons.exit_to_app),
                       onTap: () async {
-                        await setUserToken("");
-                        setState(() {
-                          _userLoggedIn = false;
-                          _userToken = "";
-                        });
+                        await UserSettings.of(context).setUserToken("");
+                        setState(() => _userLoggedIn = false);
                       },
                     ),
                   ),
@@ -107,17 +103,12 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Future<bool> setUserToken(String token) async {
+  Future<UserSettingsState> getUserSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    if (token == "") {
-      return prefs.remove("user_token");
-    }
-    return prefs.setString("user_token", token);
-  }
+    final userToken = prefs.getString("user_token");
+    final userLanguage = prefs.getString("selected_language");
 
-  Future<String> getUserToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString("user_token");
+    return UserSettingsState(userLanguage: userLanguage, userToken: userToken);
   }
 
   Widget getPage(BuildContext context) {
@@ -125,11 +116,9 @@ class _MyAppState extends State<MyApp> {
       return getLoggedInPage(context);
     } else {
       return new LoginPage((String token) {
-        setUserToken(token);
-
+        UserSettings.of(context).setUserToken(token);
         setState(() {
           _userLoggedIn = true;
-          _userToken = token;
         });
       });
     }
@@ -138,13 +127,20 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return new FutureBuilder(builder: (context, state) {
-        if (state.connectionState == ConnectionState.done && state.data != null && state.data != "") {
-          _userToken = state.data;
+      UserSettingsState us = UserSettingsState();
+      if (state.connectionState == ConnectionState.done) {
+        us = state.data;
+        if (us.userToken != null && us.userToken != '') {
           _userLoggedIn = true;
         }
-        return TranslatedApp(
+      }
+
+      return UserSettings(
+        child: TranslatedApp(
           homeBuilder: getPage,
-        );
-    }, future: getUserToken(),);
+        ),
+        data: us
+      );
+    }, future: getUserSettings());
   }
 }

@@ -1,42 +1,25 @@
 import 'dart:async';
 
+import 'package:Tubuddy/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:Tubuddy/tubuddy_strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// TranslationLanguage provides an easy way for all children in the app
-/// to access the current language and an easy way to change it using [TranslatedAppState].
-class TranslationLanguage extends InheritedWidget {
-  final TranslatedAppState data;
+class UserSettingsWidget extends StatefulWidget {
+  final Widget child;
 
-  TranslationLanguage({Key key, Widget child, this.data}) : super(key: key, child: child);
-
-  static TranslatedAppState of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(TranslationLanguage) as TranslationLanguage).data;
-  }
+  const UserSettingsWidget({Key key, this.child}) : super(key: key);
 
   @override
-  bool updateShouldNotify(TranslationLanguage oldWidget) {
-    return oldWidget.data.language != data.language;
-  }
+  State<StatefulWidget> createState() => new UserSettingsState();
 }
 
-class TranslatedApp extends StatefulWidget {
-  final String language;
-  final Widget home;
-  final WidgetBuilder homeBuilder;
+class UserSettingsState extends State<UserSettingsWidget> {
+  String userToken;
+  String userLanguage;
 
-  TranslatedApp({Key key, this.language, this.home, this.homeBuilder}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => new TranslatedAppState(language);
-}
-
-class TranslatedAppState extends State<TranslatedApp> {
-  String language;
-
-  TranslatedAppState(this.language);
+  UserSettingsState({this.userToken, this.userLanguage});
 
   void changeLanguage(String language) async {
     final instance = await SharedPreferences.getInstance();
@@ -45,8 +28,24 @@ class TranslatedAppState extends State<TranslatedApp> {
     }
 
     setState(() {
-      this.language = language;
+      this.userLanguage = language;
     });
+  }
+
+  Future<bool> setUserToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (token == "") {
+      return prefs.remove("user_token");
+    }
+    userToken = token;
+    return prefs.setString("user_token", token);
+  }
+
+  void fromOther(UserSettingsState other) {
+//    setState(() {
+    userToken = other.userToken;
+    userLanguage = other.userLanguage;
+//    });
   }
 
   Future<String> getLanguage() async {
@@ -56,19 +55,54 @@ class TranslatedAppState extends State<TranslatedApp> {
 
   @override
   Widget build(BuildContext context) {
+    return widget.child;
+  }
+
+}
+
+class UserSettings extends InheritedWidget {
+
+  final UserSettingsState data;
+
+  UserSettings({child, this.data}) : super(child: child);
+
+  static UserSettingsState of(BuildContext context) {
+    final us = (context.inheritFromWidgetOfExactType(UserSettings) as UserSettings);
+    if (us == null) return null;
+    return us.data;
+  }
+
+  @override
+  bool updateShouldNotify(UserSettings oldWidget) {
+    return oldWidget.data.userToken != data.userToken || oldWidget.data.userLanguage != data.userLanguage;
+  }
+
+}
+
+class TranslatedApp extends StatelessWidget {
+  final Widget home;
+  final WidgetBuilder homeBuilder;
+
+  const TranslatedApp({Key key, this.home, this.homeBuilder}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final userLanguage = UserSettings.of(context).userLanguage;
+    initializeApi(userLanguage);
+
     return new MaterialApp(
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
-        TubuddyStringsDelegate(language)
+        TubuddyStringsDelegate(userLanguage)
       ],
       supportedLocales: [
         Locale('en', 'US'),
         Locale('nl', 'NL'),
       ],
       localeResolutionCallback: (locale, supported) {
-        if (language != null && language.isNotEmpty) {
-          return Locale(language);
+        if (userLanguage != null && userLanguage.isNotEmpty) {
+          return Locale(userLanguage);
         } else if (supported.contains(locale)) {
           return locale;
         } else {
@@ -77,26 +111,14 @@ class TranslatedAppState extends State<TranslatedApp> {
       },
       routes: {
         '/': (context) {
-          return new TranslationLanguage(
-            child: new FutureBuilder(
-              builder: (context, snapshot) {
-                Widget body;
-                if (widget.homeBuilder != null) {
-                  body = widget.homeBuilder(context);
-                } else {
-                  body = widget.home;
-                }
+          Widget body;
+          if (homeBuilder != null) {
+            body = homeBuilder(context);
+          } else {
+            body = home;
+          }
 
-                if (snapshot.connectionState != ConnectionState.waiting) {
-                  TranslationLanguage.of(context).changeLanguage(snapshot.data);
-                }
-
-                return body;
-              },
-              future: getLanguage(),
-            ),
-            data: this,
-          );
+          return body;
         }
       },
     );
