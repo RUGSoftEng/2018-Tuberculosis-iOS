@@ -10,8 +10,7 @@ import 'package:tuple/tuple.dart';
 
 void main() {
   // Disable rotation
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(new MyApp());
 }
 
@@ -64,10 +63,11 @@ class _MyAppState extends State<MyApp> {
                     pills = [new MedicationItem("Fissa", "Any Time", 1)];
                   }
                   pageContent = new CalendarTabPage(
-                      selectedDate, pills,
-                          (DateTime date) => setState(() {
-                        selectedDate = date;
-                      }));
+                      selectedDate,
+                      pills,
+                      (DateTime date) => setState(() {
+                            selectedDate = date;
+                          }));
                   break;
                 case 1:
                   List<MedicationItem> pills = dummyMedicationData;
@@ -87,15 +87,19 @@ class _MyAppState extends State<MyApp> {
                   navigationBar: new CupertinoNavigationBar(
                     middle: pageContent.getTitle(context),
                     trailing: GestureDetector(
-                      child: Icon(Icons.exit_to_app),
-                      onTap: () async {
-                        print("log out");
-                        await (userSettings.currentState as TranslatedAppState).setUserToken("");
-                        // DO NOT REMOVE THE FOLLOWING LINE
-                        // This triggers an update of this widget as it does not happen automatically.
-                        setState(() {});
-                      },
-                    ),
+                        child: Icon(IconData(0xf43c, fontFamily: 'CupertinoIcons', fontPackage: 'cupertino_icons'),
+                            size: 28.0, color: CupertinoColors.black),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              new CupertinoPageRoute(
+                                  builder: (context) => SettingsPage(() async {
+                                        await (userSettings.currentState as TranslatedAppState).setUserToken("");
+                                        // DO NOT REMOVE THE FOLLOWING LINE
+                                        // This triggers an update of this widget as it does not happen automatically.
+                                        setState(() {});
+                                      })));
+                        }),
                   ),
                   child: new Material(child: pageContent));
             },
@@ -108,7 +112,7 @@ class _MyAppState extends State<MyApp> {
   Widget getPage(BuildContext context) {
     final state = UserSettings.of(context);
     final _userLoggedIn = (state != null && state.userToken != null && state.userToken.isNotEmpty);
-    
+
     if (_userLoggedIn) {
       return getLoggedInPage(context);
     } else {

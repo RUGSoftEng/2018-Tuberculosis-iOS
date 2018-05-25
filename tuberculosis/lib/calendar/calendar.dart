@@ -187,7 +187,7 @@ class CalendarState extends State<Calendar> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     return new Padding(
-        child: new Column(children: [nameAndIconRow, calendarGridView], mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.start,),
+        child: new Column(children: [nameAndIconRow, calendarGridView]),
         padding: new EdgeInsets.only(top: mediaQuery.padding.top));
   }
 
