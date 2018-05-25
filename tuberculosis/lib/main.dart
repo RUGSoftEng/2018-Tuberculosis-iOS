@@ -108,9 +108,7 @@ class _MyAppState extends State<MyApp> {
   Widget getPage(BuildContext context) {
     final state = UserSettings.of(context);
     final _userLoggedIn = (state != null && state.userToken != null && state.userToken.isNotEmpty);
-
-    print("UPDATE!!! " + _userLoggedIn.toString());
-
+    
     if (_userLoggedIn) {
       return getLoggedInPage(context);
     } else {
