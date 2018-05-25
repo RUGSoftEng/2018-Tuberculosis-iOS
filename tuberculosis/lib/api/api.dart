@@ -13,8 +13,12 @@ class API {
   Videos get videos => _videos;
   Login get login => _login;
 
-  API(String apiUrl) : _videos = Videos(apiUrl), _login = Login(apiUrl);
+  API(String apiUrl, String lang) : _videos = Videos(apiUrl, lang), _login = Login(apiUrl);
 
 }
 
-final api = API(API_URL);
+var api;
+
+void initializeApi(String lang) {
+  api = API(API_URL, lang);
+}

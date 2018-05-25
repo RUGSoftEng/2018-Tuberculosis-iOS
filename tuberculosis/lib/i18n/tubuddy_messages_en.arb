@@ -1,0 +1,128 @@
+{
+  "@@locale": "en",
+  "@@last_modified": "2018-05-23T14:46:44.436771",
+  "calendarTitle": "Calendar",
+  "@calendarTitle": {
+    "description": "Title for calendar tab",
+    "type": "text",
+    "placeholders": {}
+  },
+  "faqTitle": "FAQ",
+  "@faqTitle": {
+    "description": "Title for faq tab",
+    "type": "text",
+    "placeholders": {}
+  },
+  "informationTitle": "Information",
+  "@informationTitle": {
+    "description": "Title for information tab",
+    "type": "text",
+    "placeholders": {}
+  },
+  "medicationTitle": "Medication",
+  "@medicationTitle": {
+    "description": "Title for medication tab",
+    "type": "text",
+    "placeholders": {}
+  },
+  "welcomeText": "Welcome to Tubuddy!",
+  "@welcomeText": {
+    "description": "Welcome text on login page",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginBtnText": "Log In",
+  "@loginBtnText": {
+    "description": "Login button text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginBtnInProgressText": "Logging In...",
+  "@loginBtnInProgressText": {
+    "description": "Login (in progress) button text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "forgotPasswordBtnText": "Forgotten Password",
+  "@forgotPasswordBtnText": {
+    "description": "Forgotton password button text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginMissingPassword": "Please enter a password",
+  "@loginMissingPassword": {
+    "description": "Error message displayed when the user forgets to fill in a password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginMissingUsername": "Please enter a username",
+  "@loginMissingUsername": {
+    "description": "Error message displayed when the user forgets to fill in a username",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loginIncorrectCredentials": "Username or password incorrect.",
+  "@loginIncorrectCredentials": {
+    "description": "Error message displayed when the user provides invalid credentials",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pillText": "{howMany,plural, =1{pill}many{pills}other{pills}}",
+  "@pillText": {
+    "description": "Text for \"pill\" singular and plural.",
+    "type": "text",
+    "placeholders": {
+      "howMany": {}
+    }
+  },
+  "username": "Username",
+    "@username": {
+      "description": "Username field on login page",
+      "type": "text",
+      "placeholders": {}
+    },
+    "password": "Password",
+    "@password": {
+      "description": "Password field on login page",
+      "type": "text",
+      "placeholders": {}
+    },
+    "quizTitle": "Quiz",
+    "@quizTitle": {
+      "description": "Quiz",
+      "type": "text",
+      "placeholders": {}
+    },
+    "quizQuestionCorrect": "Correct!",
+    "@quizQuestionCorrect": {
+      "description": "Text displayed when quiz question is answered correctly",
+      "type": "text",
+      "placeholders": {}
+    },
+    "quizQuestionWrong": "Incorrect. The correct answer is {correctAnswer}.",
+    "@quizQuestionWrong": {
+      "description": "Text displayed when quiz question is answered incorrectly",
+      "type": "text",
+      "placeholders": {
+        "correctAnswer": {}
+      }
+    },
+    "quizQuestionProgress": "Question {current}/{total}",
+    "@quizQuestionProgress": {
+      "description": "Progress indication for quiz",
+      "type": "text",
+      "placeholders": {
+        "current": {},
+        "total": {}
+      }
+    },
+    "quizResult": "You answered {correct}/{total} questions correctly.",
+    "@quizResult": {
+      "description": "Result indication for quiz",
+      "type": "text",
+      "placeholders": {
+        "correct": {},
+        "total": {}
+      }
+    }
+}
