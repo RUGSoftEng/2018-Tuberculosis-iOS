@@ -23,5 +23,5 @@ class API {
 var api;
 
 void initializeApi(String lang) {
-  api = API(API_URL, lang);
+  api = API(API_URL, lang.toUpperCase());
 }
