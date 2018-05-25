@@ -8,33 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final GlobalKey userSettings = GlobalKey();
 
-//class UserSettingsState extends State<UserSettingsWidget> {
-//  String userToken;
-//  String userLanguage;
-//
-//  UserSettingsState({this.userToken, this.userLanguage});
-//
-//
-//
-//  void fromOther(UserSettingsState other) {
-////    setState(() {
-//    userToken = other.userToken;
-//    userLanguage = other.userLanguage;
-////    });
-//  }
-//
-//  Future<String> getLanguage() async {
-//    final instance = await SharedPreferences.getInstance();
-//    return instance.getString('selected_language');
-//  }
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return widget.child;
-//  }
-//
-//}
-
 class UserSettingsState {
   final String userToken;
   final String userLanguage;
@@ -111,9 +84,6 @@ class TranslatedAppState extends State<TranslatedApp> {
   Widget build(BuildContext context) {
     return new FutureBuilder(builder: (context, state) {
       if (state.connectionState == ConnectionState.done) {
-        if (state.data.userToken != null && state.data.userToken != '') {
-//          _userLoggedIn = true;
-        }
         userToken = state.data.userToken;
         userLanguage = state.data.userLanguage;
       }

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TubuddyStringsDelegate extends LocalizationsDelegate<TubuddyStrings> {
-  TubuddyStringsDelegate([this.overridenLocale]);
+  TubuddyStringsDelegate([this.overriddenLocale]);
 
   @override
   bool isSupported(Locale locale) {
@@ -15,15 +15,15 @@ class TubuddyStringsDelegate extends LocalizationsDelegate<TubuddyStrings> {
 
   @override
   Future<TubuddyStrings> load(Locale locale) {
-    return TubuddyStrings.load((overridenLocale != null && overridenLocale.isNotEmpty) ? Locale(overridenLocale) : locale);
+    return TubuddyStrings.load((overriddenLocale != null && overriddenLocale.isNotEmpty) ? Locale(overriddenLocale) : locale);
   }
 
   @override
   bool shouldReload(TubuddyStringsDelegate old) {
-    return old.overridenLocale != overridenLocale;
+    return old.overriddenLocale != overriddenLocale;
   }
 
-  final String overridenLocale;
+  final String overriddenLocale;
 
 }
 
