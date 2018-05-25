@@ -31,11 +31,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "faqTitle" : MessageLookupByLibrary.simpleMessage("FAQ"),
     "forgotPasswordBtnText" : MessageLookupByLibrary.simpleMessage("Forgotten Password"),
     "informationTitle" : MessageLookupByLibrary.simpleMessage("Information"),
+    "language" : MessageLookupByLibrary.simpleMessage("Language"),
     "loginBtnInProgressText" : MessageLookupByLibrary.simpleMessage("Logging In..."),
     "loginBtnText" : MessageLookupByLibrary.simpleMessage("Log In"),
     "loginIncorrectCredentials" : MessageLookupByLibrary.simpleMessage("Username or password incorrect."),
     "loginMissingPassword" : MessageLookupByLibrary.simpleMessage("Please enter a password"),
     "loginMissingUsername" : MessageLookupByLibrary.simpleMessage("Please enter a username"),
+    "logout" : MessageLookupByLibrary.simpleMessage("Log Out"),
     "medicationTitle" : MessageLookupByLibrary.simpleMessage("Medication"),
     "password" : MessageLookupByLibrary.simpleMessage("Password"),
     "pillText" : m0,
@@ -44,6 +46,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "quizQuestionWrong" : m2,
     "quizResult" : m3,
     "quizTitle" : MessageLookupByLibrary.simpleMessage("Quiz"),
+    "settings" : MessageLookupByLibrary.simpleMessage("Settings"),
     "username" : MessageLookupByLibrary.simpleMessage("Username"),
     "welcomeText" : MessageLookupByLibrary.simpleMessage("Welcome to Tubuddy!")
   };

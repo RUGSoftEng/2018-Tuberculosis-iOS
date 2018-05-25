@@ -76,53 +76,71 @@
     }
   },
   "username": "Gebruikersnaam",
-    "@username": {
-      "description": "Username field on login page",
-      "type": "text",
-      "placeholders": {}
-    },
-    "password": "Wachtwoord",
-    "@password": {
-      "description": "Password field on login page",
-      "type": "text",
-      "placeholders": {}
-    },
-    "quizTitle": "Quiz",
-    "@quizTitle": {
-      "description": "Quiz",
-      "type": "text",
-      "placeholders": {}
-    },
-    "quizQuestionCorrect": "Goed!",
-    "@quizQuestionCorrect": {
-      "description": "Text displayed when quiz question is answered correctly",
-      "type": "text",
-      "placeholders": {}
-    },
-    "quizQuestionWrong": "Fout. Het goede antwoord is {correctAnswer}.",
-    "@quizQuestionWrong": {
-      "description": "Text displayed when quiz question is answered incorrectly",
-      "type": "text",
-      "placeholders": {
-        "correctAnswer": {}
-      }
-    },
-    "quizQuestionProgress": "Vraag {current}/{total}",
-    "@quizQuestionProgress": {
-      "description": "Progress indication for quiz",
-      "type": "text",
-      "placeholders": {
-        "current": {},
-        "total": {}
-      }
-    },
-    "quizResult": "Je had {correct} vragen van de {total} goed.",
-    "@quizResult": {
-      "description": "Result indication for quiz",
-      "type": "text",
-      "placeholders": {
-        "correct": {},
-        "total": {}
-      }
+  "@username": {
+    "description": "Username field on login page",
+    "type": "text",
+    "placeholders": {}
+  },
+  "password": "Wachtwoord",
+  "@password": {
+    "description": "Password field on login page",
+    "type": "text",
+    "placeholders": {}
+  },
+  "quizTitle": "Quiz",
+  "@quizTitle": {
+    "description": "Quiz",
+    "type": "text",
+    "placeholders": {}
+  },
+  "quizQuestionCorrect": "Goed!",
+  "@quizQuestionCorrect": {
+    "description": "Text displayed when quiz question is answered correctly",
+    "type": "text",
+    "placeholders": {}
+  },
+  "quizQuestionWrong": "Fout. Het goede antwoord is {correctAnswer}.",
+  "@quizQuestionWrong": {
+    "description": "Text displayed when quiz question is answered incorrectly",
+    "type": "text",
+    "placeholders": {
+      "correctAnswer": {}
     }
+  },
+  "quizQuestionProgress": "Vraag {current}/{total}",
+  "@quizQuestionProgress": {
+    "description": "Progress indication for quiz",
+    "type": "text",
+    "placeholders": {
+      "current": {},
+      "total": {}
+    }
+  },
+  "quizResult": "Je had {correct} vragen van de {total} goed.",
+  "@quizResult": {
+    "description": "Result indication for quiz",
+    "type": "text",
+    "placeholders": {
+      "correct": {},
+      "total": {}
+    }
+  },
+  "settings": "Instellingen",
+  "@settings": {
+    "description": "Title of settings page",
+    "type": "text",
+    "placeholders": {}
+  },
+  "language": "Taal",
+  "@language": {
+    "description": "Language title on settings page",
+    "type": "text",
+    "placeholders": {}
+  },
+  "logout": "Log Uit",
+  "@logout": {
+    "description": "Log out button on settings page",
+    "type": "text",
+    "placeholders": {}
+  }
 }

@@ -31,11 +31,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "faqTitle" : MessageLookupByLibrary.simpleMessage("FAQ"),
     "forgotPasswordBtnText" : MessageLookupByLibrary.simpleMessage("Wachtwoord Vergeten"),
     "informationTitle" : MessageLookupByLibrary.simpleMessage("Informatie"),
+    "language" : MessageLookupByLibrary.simpleMessage("Taal"),
     "loginBtnInProgressText" : MessageLookupByLibrary.simpleMessage("Aan het inloggen..."),
     "loginBtnText" : MessageLookupByLibrary.simpleMessage("Log In"),
     "loginIncorrectCredentials" : MessageLookupByLibrary.simpleMessage("Gebruikersnaam of wachtwoord incorrect."),
     "loginMissingPassword" : MessageLookupByLibrary.simpleMessage("Vul een wachtwoord in"),
     "loginMissingUsername" : MessageLookupByLibrary.simpleMessage("Vul een gebruikersnaam in"),
+    "logout" : MessageLookupByLibrary.simpleMessage("Log Uit"),
     "medicationTitle" : MessageLookupByLibrary.simpleMessage("Medicatie"),
     "password" : MessageLookupByLibrary.simpleMessage("Wachtwoord"),
     "pillText" : m0,
@@ -44,6 +46,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "quizQuestionWrong" : m2,
     "quizResult" : m3,
     "quizTitle" : MessageLookupByLibrary.simpleMessage("Quiz"),
+    "settings" : MessageLookupByLibrary.simpleMessage("Instellingen"),
     "username" : MessageLookupByLibrary.simpleMessage("Gebruikersnaam"),
     "welcomeText" : MessageLookupByLibrary.simpleMessage("Welkom bij Tubuddy!")
   };

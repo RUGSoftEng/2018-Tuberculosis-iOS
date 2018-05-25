@@ -181,4 +181,25 @@ class TubuddyStrings {
       locale: _localeName,
       args: [correct, total]
   );
+
+  String get settings => Intl.message(
+    'Settings',
+    name: 'settings',
+    desc: 'Title of settings page',
+    locale: _localeName
+  );
+
+  String get language => Intl.message(
+    'Language',
+    name: 'language',
+    desc: 'Language title on settings page',
+    locale: _localeName
+  );
+
+  String get logout => Intl.message(
+      'Log Out',
+      name: 'logout',
+      desc: 'Log out button on settings page',
+      locale: _localeName
+  );
 }
