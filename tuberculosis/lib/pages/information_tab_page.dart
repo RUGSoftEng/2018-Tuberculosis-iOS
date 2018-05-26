@@ -141,6 +141,9 @@ class VideoScreen extends StatelessWidget {
     } else {
       int start = url.indexOf("v=") + 2;
       int end = url.indexOf('&', start);
+      if (end == -1) {
+        end = url.length;
+      }
       return url.substring(start, end);
     }
   }
