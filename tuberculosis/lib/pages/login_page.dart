@@ -9,7 +9,7 @@ import 'dart:io';
 import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
-  final ValueChanged<String> _userLoggedIn;
+  final ValueChanged<Map> _userLoggedIn;
 
   LoginPage(this._userLoggedIn);
 
@@ -18,7 +18,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-  final ValueChanged<String> _userLoggedIn;
+  final ValueChanged<Map> _userLoggedIn;
   final _formKey = new GlobalKey<FormState>();
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
   String _username, _password;
@@ -29,20 +29,20 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return new CupertinoPageScaffold(
-            navigationBar: new CupertinoNavigationBar(
-                middle: Text(TubuddyStrings.of(context).welcomeText)),
-            child: new Scaffold(
-                key: _scaffoldKey,
-                body: new DefaultTextStyle(
-                    style: const TextStyle(
-                      fontFamily: '.SF UI Text',
-                      fontSize: 17.0,
-                      color: CupertinoColors.black,
-                    ),
-                    child: new Padding(
-                        padding: new EdgeInsets.all(30.0),
-                        child: new Container(
-                            child: new Center(child: _loginWidget()))))));
+        navigationBar: new CupertinoNavigationBar(
+            middle: Text(TubuddyStrings.of(context).welcomeText)),
+        child: new Scaffold(
+            key: _scaffoldKey,
+            body: new DefaultTextStyle(
+                style: const TextStyle(
+                  fontFamily: '.SF UI Text',
+                  fontSize: 17.0,
+                  color: CupertinoColors.black,
+                ),
+                child: new Padding(
+                    padding: new EdgeInsets.all(30.0),
+                    child: new Container(
+                        child: new Center(child: _loginWidget()))))));
   }
 
   void _showInSnackbar(String val) {
@@ -78,7 +78,9 @@ class LoginPageState extends State<LoginPage> {
 
     final loginButton = new CupertinoButton(
         onPressed: _logInButtonDisabled ? null : _processForm,
-        child: new Text(_logInButtonDisabled ? TubuddyStrings.of(context).loginBtnInProgressText : TubuddyStrings.of(context).loginBtnText));
+        child: new Text(_logInButtonDisabled
+            ? TubuddyStrings.of(context).loginBtnInProgressText
+            : TubuddyStrings.of(context).loginBtnText));
 
     final forgottenPasswordButton = new CupertinoButton(
         child: Text(
@@ -127,27 +129,17 @@ class LoginPageState extends State<LoginPage> {
   void _handleLogin() async {
     setState(() => _logInButtonDisabled = true);
     if (_username == "demo" && _password == "demo123") {
-      _userLoggedIn("");
+      _userLoggedIn(null);
     } else {
       final loginResult = await api.login.doLogin(_username, _password);
       if (loginResult.success) {
-        _userLoggedIn(loginResult.result.token);
+        _userLoggedIn({
+          'token': loginResult.result.token,
+          'patientId': loginResult.result.id
+        });
       } else {
         _showLogInError(TubuddyStrings.of(context).loginIncorrectCredentials);
       }
-//      http
-//          .post(_apiUrl + "/accounts/login",
-//              body: json.encode({"username": _username, "password": _password}))
-//          .timeout(const Duration(seconds: 5))
-//          .then((response) {
-//        if (response.statusCode == HttpStatus.OK) {
-//          // TODO store received API token somewhere, add blocking spinner.
-//          _userLoggedIn(true);
-//        } else {
-//          _showLogInError("Username or password incorrect.");
-//        }
-//      }).catchError(
-//              (e) => _showLogInError("Error: could not connect to server."));
     }
   }
 

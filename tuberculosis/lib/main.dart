@@ -116,8 +116,9 @@ class _MyAppState extends State<MyApp> {
     if (_userLoggedIn) {
       return getLoggedInPage(context);
     } else {
-      return new LoginPage((String token) {
-        (userSettings.currentState as TranslatedAppState).setUserToken(token);
+      return new LoginPage((Map userDetails) {
+        (userSettings.currentState as TranslatedAppState).setUserToken(userDetails['token']);
+        (userSettings.currentState as TranslatedAppState).setPatientId(userDetails['id']);
       });
     }
   }
