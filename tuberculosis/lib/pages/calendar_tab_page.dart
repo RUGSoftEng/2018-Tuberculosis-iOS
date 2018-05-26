@@ -14,8 +14,8 @@ class CalendarTabPage extends StatelessWidget implements TabPage {
   }
 
   // 0xf3f3: calendar icon (see: https://raw.githubusercontent.com/flutter/cupertino_icons/master/map.png)
-  static final Icon icon =
-      const Icon(const IconData(0xf3f3, fontFamily: 'CupertinoIcons', fontPackage: 'cupertino_icons'));
+  static final Icon icon = const Icon(const IconData(0xf3f3,
+      fontFamily: 'CupertinoIcons', fontPackage: 'cupertino_icons'));
 
   final DateTime today;
   final ValueChanged<DateTime> onDateSelected;
@@ -24,7 +24,7 @@ class CalendarTabPage extends StatelessWidget implements TabPage {
   CalendarTabPage(this.today, this.pills, [this.onDateSelected]);
 
   @override
-  Widget build(BuildContext context)  {
+  Widget build(BuildContext context) {
     return new Column(children: <Widget>[
       Calendar(isExpandable: true, onDateSelected: onDateSelected),
       Divider(color: CupertinoColors.lightBackgroundGray, height: 5.0),
