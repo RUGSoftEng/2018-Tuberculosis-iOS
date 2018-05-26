@@ -80,6 +80,14 @@ class TranslatedAppState extends State<TranslatedApp> {
     });
   }
 
+  String getLanguageCode(BuildContext context) {
+    var locale = userLanguage;
+    if (locale == null) {
+      locale = Localizations.localeOf(context).languageCode;
+    }
+    return locale;
+  }
+
   @override
   Widget build(BuildContext context) {
     return new FutureBuilder(builder: (context, state) {

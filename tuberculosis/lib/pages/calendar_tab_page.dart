@@ -25,13 +25,8 @@ class CalendarTabPage extends StatelessWidget implements TabPage {
 
   @override
   Widget build(BuildContext context)  {
-    var locale = UserSettings.of(context).userLanguage;
-    if (locale == null) {
-      locale = Localizations.localeOf(context).languageCode;
-    }
-
     return new Column(children: <Widget>[
-      Calendar(isExpandable: true, onDateSelected: onDateSelected, locale: locale),
+      Calendar(isExpandable: true, onDateSelected: onDateSelected),
       Divider(color: CupertinoColors.lightBackgroundGray, height: 5.0),
       Expanded(
           child: ListView(

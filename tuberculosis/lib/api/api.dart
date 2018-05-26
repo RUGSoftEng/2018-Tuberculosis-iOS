@@ -17,7 +17,6 @@ class API {
   FAQ get faq => _faq;
 
   API(String apiUrl, String lang) : _videos = Videos(apiUrl, lang), _login = Login(apiUrl), _faq = FAQ(apiUrl, lang);
-
 }
 
 var api;

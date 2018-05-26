@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:Tubuddy/flutter_fix/fixed_gridview.dart';
+import 'package:Tubuddy/translated_app.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tuple/tuple.dart';
@@ -17,7 +18,6 @@ class Calendar extends StatefulWidget {
   final bool showChevronsToChangeRange;
   final bool showTodayAction;
   final bool showCalendarPickerIcon;
-  final String locale;
 
   Calendar({
     this.onDateSelected,
@@ -26,8 +26,7 @@ class Calendar extends StatefulWidget {
     this.dayBuilder,
     this.showTodayAction: true,
     this.showChevronsToChangeRange: true,
-    this.showCalendarPickerIcon: true,
-    this.locale
+    this.showCalendarPickerIcon: true
   });
 
   @override
@@ -56,9 +55,6 @@ class CalendarState extends State<Calendar> {
         .toList()
         .sublist(0, 7);
     _selectedDate = today;
-    Intl.withLocale(widget.locale, () {
-      displayMonth = Utils.formatMonth(Utils.firstDayOfWeek(today));
-    });
   }
 
   Widget get nameAndIconRow {
@@ -191,6 +187,11 @@ class CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    final locale = UserSettings.of(context).getLanguageCode(context);
+    Intl.withLocale(locale, () {
+      // This inline format is needed otherwise the string does not change when the locale does.
+      displayMonth = (new DateFormat("MMMM yyyy")).format(Utils.firstDayOfWeek(today));
+    });
     return new Padding(
         child: new Column(children: [nameAndIconRow, calendarGridView]),
         padding: new EdgeInsets.only(top: mediaQuery.padding.top));
