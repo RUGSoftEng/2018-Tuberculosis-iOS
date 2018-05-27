@@ -40,13 +40,16 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
   int _patientId;
 
   _CalendarTabPageState() {
-    onDateSelected = (DateTime date) => setState(() async {
+    onDateSelected = (DateTime date) => setState(() {
           if (selectedDate.month != date.month) {
             // Query the API for this month's dosages if we don't already have it stored.
             DateTime today = DateTime.now();
-            monthDosageList = await dosages.getDosages(
-                DateTime(today.year, date.month, 1),
-                DateTime(today.year, date.month + 1, 1));
+            dosages
+                .getDosages(DateTime(today.year, date.month, 1),
+                    DateTime(today.year, date.month + 1, 1))
+                .then((newDosages) {
+              monthDosageList = newDosages;
+            });
           }
           selectedDate = date;
           // Select today's dosages.
