@@ -41,16 +41,19 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
 
   _CalendarTabPageState() {
     onDateSelected = (DateTime date) => setState(() async {
-          if (selectedDate.month == date.month) {
-            // We already have this month's dosages stored, so don't query the API again.
-          } else {
-            // Query the API for this month's dosages.
+          if (selectedDate.month != date.month) {
+            // Query the API for this month's dosages if we don't already have it stored.
             DateTime today = DateTime.now();
             monthDosageList = await dosages.getDosages(
                 DateTime(today.year, date.month, 1),
                 DateTime(today.year, date.month + 1, 1));
           }
           selectedDate = date;
+          // Select today's dosages.
+          todayDosageList = List<Dosage>();
+          monthDosageList.forEach((Dosage d) {
+            if (d.date == date) todayDosageList.add(d);
+          });
         });
   }
 
@@ -59,9 +62,12 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
     if (_patientId == null) {
       _patientId = UserSettings.of(context).patientId;
       // TODO: Don't hard code the API url.
-      dosages = new Dosages("http://37.97.185.127:10123/api", _patientId);
+      dosages = Dosages("http://37.97.185.127:10123/api", _patientId);
       // Reset the state in order to get the dosages of this month.
-      setState(() {});
+      // Ugly workaround, I know, but it should work for now.
+      DateTime date = selectedDate;
+      selectedDate = DateTime(1980, 1, 1);
+      onDateSelected(date);
     }
     return new Column(children: <Widget>[
       Calendar(isExpandable: true, onDateSelected: onDateSelected),
