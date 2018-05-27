@@ -1,3 +1,4 @@
+import 'package:Tubuddy/api/dosages.dart';
 import 'package:Tubuddy/api/login.dart';
 import 'package:Tubuddy/api/videos.dart';
 
@@ -9,16 +10,22 @@ const API_URL = "http://37.97.185.127:10123/api";
 class API {
   final Videos _videos;
   final Login _login;
+  final Dosages _dosages;
 
   Videos get videos => _videos;
+
   Login get login => _login;
 
-  API(String apiUrl, String lang) : _videos = Videos(apiUrl, lang), _login = Login(apiUrl);
+  Dosages get dosages => _dosages;
 
+  API(String apiUrl, String lang, int patientdId)
+      : _videos = Videos(apiUrl, lang),
+        _login = Login(apiUrl),
+        _dosages = Dosages(apiUrl, patientdId);
 }
 
 var api;
 
-void initializeApi(String lang) {
-  api = API(API_URL, lang);
+void initializeApi(String lang, int patiendId) {
+  api = API(API_URL, lang, patiendId);
 }

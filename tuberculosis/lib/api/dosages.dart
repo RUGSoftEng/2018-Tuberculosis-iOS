@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:Tubuddy/tubuddy_strings.dart';
 
-class Dosage {
+class Dosage extends StatelessWidget {
   final DateTime intakeMoment;
   final int amount;
   final String medicineName;
@@ -24,6 +26,18 @@ class Dosage {
         medicineName: json['medicine']['name'],
         date: json['date'],
         taken: json['taken']);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new ListTile(
+        leading: const Icon(Icons.healing),
+        title: new Text(medicineName),
+        subtitle: new Text(intakeMoment.toString() +
+            " - " +
+            amount.toString() +
+            ' ' +
+            TubuddyStrings.of(context).pillText(amount)));
   }
 }
 

@@ -7,8 +7,9 @@ import 'package:flutter/widgets.dart';
 import 'package:Tubuddy/pages/tab_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:Tubuddy/pages/medication_tab_page.dart';
+import 'package:Tubuddy/api/dosages.dart';
 
-class CalendarTabPage extends StatelessWidget implements TabPage {
+class CalendarTabPage extends StatefulWidget implements TabPage {
   static String getTitleStatic(BuildContext context) {
     return TubuddyStrings.of(context).calendarTitle;
   }
@@ -18,27 +19,59 @@ class CalendarTabPage extends StatelessWidget implements TabPage {
       fontFamily: 'CupertinoIcons', fontPackage: 'cupertino_icons'));
 
   final DateTime today;
-  final ValueChanged<DateTime> onDateSelected;
-  final List<MedicationItem> pills;
 
-  CalendarTabPage(this.today, this.pills, [this.onDateSelected]);
+  CalendarTabPage(this.today);
+
+  @override
+  Text getTitle(BuildContext context) {
+    return Text(getTitleStatic(context));
+  }
+
+  @override
+  _CalendarTabPageState createState() => new _CalendarTabPageState();
+}
+
+class _CalendarTabPageState extends State<CalendarTabPage> {
+  ValueChanged<DateTime> onDateSelected;
+  DateTime selectedDate;
+  Dosages dosages;
+  List<Dosage> monthDosageList;
+  List<Dosage> todayDosageList;
+  int _patientId;
+
+  _CalendarTabPageState() {
+    onDateSelected = (DateTime date) => setState(() async {
+          if (selectedDate.month == date.month) {
+            // We already have this month's dosages stored, so don't query the API again.
+          } else {
+            // Query the API for this month's dosages.
+            DateTime today = DateTime.now();
+            monthDosageList = await dosages.getDosages(
+                DateTime(today.year, date.month, 1),
+                DateTime(today.year, date.month + 1, 1));
+          }
+          selectedDate = date;
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_patientId == null) {
+      _patientId = UserSettings.of(context).patientId;
+      // TODO: Don't hard code the API url.
+      dosages = new Dosages("http://37.97.185.127:10123/api", _patientId);
+      // Reset the state in order to get the dosages of this month.
+      setState(() {});
+    }
     return new Column(children: <Widget>[
       Calendar(isExpandable: true, onDateSelected: onDateSelected),
       Divider(color: CupertinoColors.lightBackgroundGray, height: 5.0),
       Expanded(
           child: ListView(
-        children: pills,
+        children: todayDosageList,
         shrinkWrap: false,
         padding: EdgeInsets.zero,
       )),
     ], mainAxisSize: MainAxisSize.max);
-  }
-
-  @override
-  Text getTitle(BuildContext context) {
-    return Text(getTitleStatic(context));
   }
 }

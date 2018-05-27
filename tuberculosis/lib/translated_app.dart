@@ -103,9 +103,10 @@ class TranslatedAppState extends State<TranslatedApp> {
           if (state.connectionState == ConnectionState.done) {
             userToken = state.data.userToken;
             userLanguage = state.data.userLanguage;
+            patientId = state.data.patientId;
           }
 
-          initializeApi(userLanguage);
+          initializeApi(userLanguage, patientId);
 
           return UserSettings(
               child: new MaterialApp(
