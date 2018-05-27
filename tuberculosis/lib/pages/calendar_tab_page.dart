@@ -41,9 +41,9 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
 
   _CalendarTabPageState() {
     onDateSelected = (DateTime date) => setState(() {
+          DateTime today = DateTime.now();
           if (selectedDate.month != date.month) {
             // Query the API for this month's dosages if we don't already have it stored.
-            DateTime today = DateTime.now();
             dosages
                 .getDosages(DateTime(today.year, date.month, 1),
                     DateTime(today.year, date.month + 1, 1))
@@ -54,9 +54,13 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
           selectedDate = date;
           // Select today's dosages.
           todayDosageList = List<Dosage>();
-          monthDosageList.forEach((Dosage d) {
-            if (d.date == date) todayDosageList.add(d);
-          });
+          if (monthDosageList == null) {
+            print("Geen medicijnen voor deze maand gevonden... :/");
+          } else {
+            monthDosageList.forEach((Dosage d) {
+              if (d.date == date) todayDosageList.add(d);
+            });
+          }
         });
   }
 
@@ -68,7 +72,7 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
       dosages = Dosages("http://37.97.185.127:10123/api", _patientId);
       // Reset the state in order to get the dosages of this month.
       // Ugly workaround, I know, but it should work for now.
-      DateTime date = selectedDate;
+      DateTime date = DateTime.now();
       selectedDate = DateTime(1980, 1, 1);
       onDateSelected(date);
     }

@@ -49,10 +49,14 @@ class Dosages {
   Dosages(this._apiUrl, this._patientId);
 
   Future<List<Dosage>> getDosages(DateTime from, DateTime until) async {
+    print("$_apiUrl/accounts/patients/$_patientId/dosages/scheduled?from=${formatter
+        .format(from)}&until=${formatter.format(until)}");
     final response = await http.get(
         "$_apiUrl/accounts/patients/$_patientId/dosages/scheduled?from=${formatter
             .format(from)}&until=${formatter.format(until)}");
     final responseJson = await json.decode(response.body);
+
+    print(responseJson.toString());
 
     List<Dosage> dosages;
     for (Map dosage in responseJson) {
