@@ -39,29 +39,34 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
   List<Dosage> todayDosageList;
   int _patientId;
 
-  _CalendarTabPageState() {
-    onDateSelected = (DateTime date) => setState(() {
-          DateTime today = DateTime.now();
-          if (selectedDate.month != date.month) {
-            // Query the API for this month's dosages if we don't already have it stored.
-            api.dosages
-                .getDosages(DateTime(today.year, date.month, 1),
-                    DateTime(today.year, date.month + 1, 1))
-                .then((newDosages) {
-              monthDosageList = newDosages;
-            });
-          }
-          selectedDate = date;
-          // Select today's dosages.
-          todayDosageList = List<Dosage>();
-          if (monthDosageList == null) {
-            print("Geen medicijnen voor deze maand gevonden... :/");
-          } else {
-            monthDosageList.forEach((Dosage d) {
-              if (d.date == date) todayDosageList.add(d);
-            });
-          }
+  void _updateDosagesForSelectedDate() {
+    if (monthDosageList != null) {
+      todayDosageList.clear();
+      todayDosageList.addAll(monthDosageList.where((dosage) {
+        return dosage.date.day == selectedDate.day && dosage.date.month == selectedDate.month;
+      }));
+    }
+  }
+
+  _CalendarTabPageState() : monthDosageList = List<Dosage>(), todayDosageList = List<Dosage>() {
+
+    onDateSelected = (DateTime date) {
+      DateTime today = DateTime.now();
+      if (selectedDate.month != date.month || selectedDate.year != date.year) {
+        api.dosages.getDosages(
+            DateTime(today.year, today.month, 1),
+            DateTime(today.year, date.month + 1, 1)
+        ).then((dosages) {
+          setState(() {
+            monthDosageList = dosages;
+            _updateDosagesForSelectedDate();
+          });
         });
+      }
+
+      selectedDate = date;
+      setState(() => _updateDosagesForSelectedDate());
+    };
   }
 
   @override
@@ -79,7 +84,13 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
       Divider(color: CupertinoColors.lightBackgroundGray, height: 5.0),
       Expanded(
           child: ListView(
-        children: todayDosageList,
+        children: todayDosageList.map((dosage) {
+          return MedicationItem(
+            dosage.medicineName,
+            dosage.intakeMoment,
+            dosage.amount
+          );
+        }).toList(),
         shrinkWrap: false,
         padding: EdgeInsets.zero,
       )),

@@ -26,7 +26,7 @@ class API {
         _faq = FAQ(apiUrl, lang);
 }
 
-var api;
+API api;
 
 void initializeApi(String lang, int patientId, String token) {
   if (lang == null) {
