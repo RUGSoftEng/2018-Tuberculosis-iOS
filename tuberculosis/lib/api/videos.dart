@@ -1,19 +1,50 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:Tubuddy/quiz/question.dart';
 import 'package:http/http.dart' as http;
+
+class Quiz {
+  final List<Question> questions;
+
+  Quiz({this.questions});
+
+  factory Quiz.fromJson(Map<String, dynamic> json) {
+    var questions = new List<Question>();
+
+    if (json.containsKey('quizzes') && json['quizzes'] != null) {
+      json['quizzes'].forEach((q) {
+        var answers = List<String>();
+        q['answers'].forEach((d) => answers.add(d as String));
+        final newQuestion = Question(
+            q['question'],
+            answers: answers
+        );
+        questions.add(newQuestion);
+      });
+
+      return Quiz(
+          questions: questions
+      );
+    } else {
+      return null;
+    }
+  }
+}
 
 class Video {
   final String topic;
   final String title;
   final String reference;
+  final Quiz quiz;
 
-  Video({this.topic, this.title, this.reference});
+  Video({this.topic, this.title, this.reference, this.quiz});
 
   factory Video.fromJson(Map<String, dynamic> json) {
     return new Video(
-        topic: json['topic'],
-        title: json['title'],
-        reference: json['reference']
+        topic: json['video']['topic'],
+        title: json['video']['title'],
+        reference: json['video']['reference'],
+        quiz: Quiz.fromJson(json)
     );
   }
 }

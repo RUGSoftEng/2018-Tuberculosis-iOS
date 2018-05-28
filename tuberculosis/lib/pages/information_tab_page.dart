@@ -96,15 +96,21 @@ class VideoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> sampleData = <String>[
-      "https://www.youtube.com/watch?v=yR51KVF4OX0",
-      "https://www.youtube.com/watch?v=yR51KVF4OX0"
-    ];
-    List<Question> questions = <Question>[
-      const Question("Hoi"),
-      const Question("Vraag 2"),
-      new Question("ASdadasda", answers: ["asdsadsadasadsasaasdas", "bgbgbgbgbgbg", "cdiasdihsjsdjfhskjfhskdfhkshjkjkhksfdhjkh"], correctAnswer: 2)
-    ];
+    List<Widget> children = List<Widget>();
+
+    children.add(new GestureDetector(
+      onTap: () => _openVideo(_video.reference),
+      child: new Image.network(
+          "http://img.youtube.com/vi/" +
+              getIdFromUrl(_video.reference) +
+              "/hqdefault.jpg",
+          fit: BoxFit.cover),
+    ));
+
+    if (_video.quiz != null) {
+      children.add(new QuizWidget(_video.quiz.questions));
+    }
+
     return new CupertinoPageScaffold(
         navigationBar: new CupertinoNavigationBar(
           middle: new Text(_video.title),
@@ -112,22 +118,34 @@ class VideoScreen extends StatelessWidget {
         child: new Material(
             child: new SafeArea(
                 child: new Column(
-                  children: [
-                    new GestureDetector(
-                      onTap: () => _openVideo(_video.reference),
-                      child: new Image.network(
-                          "http://img.youtube.com/vi/" +
-                              getIdFromUrl(_video.reference) +
-                              "/hqdefault.jpg",
-                          fit: BoxFit.cover),
-                    ),
-                    new QuizWidget(questions)
-                  ],
+                  children: children,
                 ))));
   }
 
   String getIdFromUrl(String url) {
-    return url.substring(url.indexOf("?v=") + 3);
+    if (url.startsWith('https://')) {
+      url = url.substring('https://'.length);
+    }
+    if (url.startsWith('http://')) {
+      url = url.substring('http://'.length);
+    }
+    if (url.startsWith('www.')) {
+      url = url.substring('www.'.length);
+    }
+    if (url.startsWith('youtu.be')) {
+      int end = url.indexOf('&');
+      if (end == -1) {
+        end = url.length;
+      }
+      return url.substring(url.indexOf('/') + 1, end);
+    } else {
+      int start = url.indexOf("v=") + 2;
+      int end = url.indexOf('&', start);
+      if (end == -1) {
+        end = url.length;
+      }
+      return url.substring(start, end);
+    }
   }
 
   _openVideo(String url) async {
