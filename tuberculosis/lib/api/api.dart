@@ -26,6 +26,6 @@ class API {
 
 var api;
 
-void initializeApi(String lang, int patiendId) {
-  api = API(API_URL, lang, patiendId);
+void initializeApi(String lang, int patientId) {
+  api = API(API_URL, lang, patientId);
 }
