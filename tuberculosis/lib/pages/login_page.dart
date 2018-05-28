@@ -9,22 +9,21 @@ import 'dart:io';
 import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
-  final ValueChanged<Map> _userLoggedIn;
+  final ValueChanged<LoggedInUser> _userLoggedIn;
 
   LoginPage(this._userLoggedIn);
 
   @override
-  LoginPageState createState() => new LoginPageState(_userLoggedIn);
+  LoginPageState createState() => new LoginPageState();
 }
 
 class LoginPageState extends State<LoginPage> {
-  final ValueChanged<Map> _userLoggedIn;
   final _formKey = new GlobalKey<FormState>();
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
   String _username, _password;
   bool _logInButtonDisabled = false;
 
-  LoginPageState(this._userLoggedIn);
+  LoginPageState();
 
   @override
   Widget build(BuildContext context) {
@@ -129,14 +128,11 @@ class LoginPageState extends State<LoginPage> {
   void _handleLogin() async {
     setState(() => _logInButtonDisabled = true);
     if (_username == "demo" && _password == "demo123") {
-      _userLoggedIn(null);
+      widget._userLoggedIn(null);
     } else {
       final loginResult = await api.login.doLogin(_username, _password);
       if (loginResult.success) {
-        _userLoggedIn({
-          'token': loginResult.result.token,
-          'patientId': loginResult.result.id
-        });
+        widget._userLoggedIn(loginResult.result);
       } else {
         _showLogInError(TubuddyStrings.of(context).loginIncorrectCredentials);
       }

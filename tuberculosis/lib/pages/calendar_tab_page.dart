@@ -1,3 +1,4 @@
+import 'package:Tubuddy/api/api.dart';
 import 'package:Tubuddy/calendar/calendar.dart';
 import 'package:Tubuddy/main.dart';
 import 'package:Tubuddy/translated_app.dart';
@@ -34,7 +35,6 @@ class CalendarTabPage extends StatefulWidget implements TabPage {
 class _CalendarTabPageState extends State<CalendarTabPage> {
   ValueChanged<DateTime> onDateSelected;
   DateTime selectedDate;
-  Dosages dosages;
   List<Dosage> monthDosageList;
   List<Dosage> todayDosageList;
   int _patientId;
@@ -44,7 +44,7 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
           DateTime today = DateTime.now();
           if (selectedDate.month != date.month) {
             // Query the API for this month's dosages if we don't already have it stored.
-            dosages
+            api.dosages
                 .getDosages(DateTime(today.year, date.month, 1),
                     DateTime(today.year, date.month + 1, 1))
                 .then((newDosages) {
@@ -68,8 +68,6 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
   Widget build(BuildContext context) {
     if (_patientId == null) {
       _patientId = UserSettings.of(context).patientId;
-      // TODO: Don't hard code the API url.
-      dosages = Dosages("http://37.97.185.127:10123/api", _patientId);
       // Reset the state in order to get the dosages of this month.
       // Ugly workaround, I know, but it should work for now.
       DateTime date = DateTime.now();

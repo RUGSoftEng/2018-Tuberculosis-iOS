@@ -114,7 +114,7 @@ class TranslatedAppState extends State<TranslatedApp> {
             patientId = state.data.patientId;
           }
 
-          initializeApi(userLanguage, patientId);
+          initializeApi(userLanguage, patientId, userToken);
 
           return UserSettings(
               child: new MaterialApp(

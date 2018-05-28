@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:Tubuddy/api/login.dart';
 import 'package:Tubuddy/pages/pages.dart';
 import 'package:Tubuddy/tubuddy_strings.dart';
 import 'package:flutter/material.dart';
@@ -120,11 +121,11 @@ class _MyAppState extends State<MyApp> {
     if (_userLoggedIn) {
       return getLoggedInPage(context);
     } else {
-      return new LoginPage((Map userDetails) {
+      return new LoginPage((LoggedInUser user) {
         (userSettings.currentState as TranslatedAppState)
-            .setUserToken(userDetails['token']);
+            .setUserToken(user.token);
         (userSettings.currentState as TranslatedAppState)
-            .setPatientId(userDetails['id']);
+            .setPatientId(user.id);
       });
     }
   }

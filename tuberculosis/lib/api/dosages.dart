@@ -44,16 +44,17 @@ class Dosage extends StatelessWidget {
 class Dosages {
   final String _apiUrl;
   final int _patientId;
+  final String _token;
   final formatter = new DateFormat('yyyy-MM-dd');
 
-  Dosages(this._apiUrl, this._patientId);
+  Dosages(this._apiUrl, this._patientId, this._token);
 
   Future<List<Dosage>> getDosages(DateTime from, DateTime until) async {
     print("$_apiUrl/accounts/patients/$_patientId/dosages/scheduled?from=${formatter
         .format(from)}&until=${formatter.format(until)}");
     final response = await http.get(
         "$_apiUrl/accounts/patients/$_patientId/dosages/scheduled?from=${formatter
-            .format(from)}&until=${formatter.format(until)}");
+            .format(from)}&until=${formatter.format(until)}", headers: {"access_token": _token});
     final responseJson = await json.decode(response.body);
 
     print(responseJson.toString());

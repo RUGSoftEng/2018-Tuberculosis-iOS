@@ -19,15 +19,18 @@ class API {
   FAQ get faq => _faq;
   Dosages get dosages => _dosages;
 
-  API(String apiUrl, String lang, int patientId)
+  API(String apiUrl, String lang, int patientId, String token)
       : _videos = Videos(apiUrl, lang),
         _login = Login(apiUrl),
-        _dosages = Dosages(apiUrl, patientId),
+        _dosages = Dosages(apiUrl, patientId, token),
         _faq = FAQ(apiUrl, lang);
 }
 
 var api;
 
-void initializeApi(String lang, int patientId) {
-  api = API(API_URL, lang.toUpperCase(), patientId);
+void initializeApi(String lang, int patientId, String token) {
+  if (lang == null) {
+    lang = '';
+  }
+  api = API(API_URL, lang.toUpperCase(), patientId, token);
 }
