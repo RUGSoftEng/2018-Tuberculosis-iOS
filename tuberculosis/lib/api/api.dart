@@ -18,10 +18,10 @@ class API {
 
   Dosages get dosages => _dosages;
 
-  API(String apiUrl, String lang, int patientdId)
+  API(String apiUrl, String lang, int patientId)
       : _videos = Videos(apiUrl, lang),
         _login = Login(apiUrl),
-        _dosages = Dosages(apiUrl, patientdId);
+        _dosages = Dosages(apiUrl, patientId);
 }
 
 var api;
