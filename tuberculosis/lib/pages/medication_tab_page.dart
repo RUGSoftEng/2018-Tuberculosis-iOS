@@ -5,7 +5,6 @@ import 'package:Tubuddy/pages/tab_page.dart';
 import 'package:flutter/cupertino.dart';
 
 class MedicationTabPage extends StatelessWidget implements TabPage {
-  static final Text title = const Text("Medication");
   static final Icon icon = const Icon(CupertinoIcons.book);
 
   static String getTitleStatic(BuildContext context) {
