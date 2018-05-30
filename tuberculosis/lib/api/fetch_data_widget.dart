@@ -9,8 +9,9 @@ class FetchDataWidget<T> extends StatefulWidget {
 
   final Function getFutureFunction;
   final FetchDataWidgetBuilder<T> builder;
+  final String language;
 
-  FetchDataWidget({this.getFutureFunction, this.builder});
+  FetchDataWidget({this.getFutureFunction, this.builder, this.language});
 
   @override
   _FetchDataWidgetState<T> createState() => _FetchDataWidgetState<T>(getFutureFunction());
@@ -21,6 +22,18 @@ class _FetchDataWidgetState<T> extends State<FetchDataWidget<T>> {
   Future<T> _future;
 
   _FetchDataWidgetState(this._future);
+
+  @override
+  bool didUpdateWidget(FetchDataWidget<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.language != widget.language) {
+      setState(() {
+        _future = widget.getFutureFunction();
+      });
+      return true;
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
