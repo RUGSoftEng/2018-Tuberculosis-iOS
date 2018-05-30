@@ -50,6 +50,8 @@ class LoginPageState extends State<LoginPage> {
         .showSnackBar(new SnackBar(content: new Text(val)));
   }
 
+  final passwordFocus = FocusNode();
+
   Widget _loginWidget() {
     final logo = new Image.asset('graphics/logo.png', height: 200.0);
 
@@ -63,6 +65,7 @@ class LoginPageState extends State<LoginPage> {
       onSaved: (val) => _username = val,
       keyboardType: TextInputType.emailAddress,
       autocorrect: false,
+      onFieldSubmitted: (str) => _doFocusPassword(),
     );
 
     final passwordField = new TextFormField(
@@ -74,6 +77,13 @@ class LoginPageState extends State<LoginPage> {
       validator: _validatePassword,
       onSaved: (val) => _password = val,
       obscureText: true,
+      onFieldSubmitted: (str) {
+        _password = str;
+        if (!_logInButtonDisabled) {
+          _processForm();
+        }
+      },
+      focusNode: passwordFocus,
     );
 
     final loginButton = new CupertinoButton(
@@ -154,5 +164,9 @@ class LoginPageState extends State<LoginPage> {
   void _showLogInError(String val) {
     _showInSnackbar(val);
     setState(() => _logInButtonDisabled = false);
+  }
+
+  _doFocusPassword() {
+    FocusScope.of(context).requestFocus(this.passwordFocus);
   }
 }
