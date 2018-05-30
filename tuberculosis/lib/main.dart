@@ -60,16 +60,12 @@ class _MyAppState extends State<MyApp> {
               TabPage pageContent;
               switch (index) {
                 case 0:
-                  List<MedicationItem> pills = dummyMedicationData;
-                  if (selectedDate.day != (new DateTime.now()).day) {
-                    pills = [new MedicationItem("Fissa", "Any Time", 1)];
-                  }
                   pageContent = new CalendarTabPage(DateTime.now());
                   break;
                 case 1:
                   List<MedicationItem> pills = dummyMedicationData;
                   if (selectedDate.day != (new DateTime.now()).day) {
-                    pills = [new MedicationItem("Fissa", "Any Time", 1)];
+                    pills = [new MedicationItem("Fissa", "Any Time", 1, true, false)];
                   }
                   pageContent = new MedicationTabPage(pills);
                   break;
