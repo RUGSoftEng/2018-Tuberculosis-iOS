@@ -1,6 +1,7 @@
 import 'package:Tubuddy/api/api.dart';
 import 'package:Tubuddy/api/faq.dart';
 import 'package:Tubuddy/api/fetch_data_widget.dart';
+import 'package:Tubuddy/translated_app.dart';
 import 'package:Tubuddy/tubuddy_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -62,7 +63,8 @@ class FaqTabPage extends StatelessWidget implements TabPage {
               itemCount: entries.length * 2,
           ));
         },
-        getFutureFunction: api.faq.getEntries
+        getFutureFunction: api.faq.getEntries,
+        language: api.lang,
       ),
       _FaqQuestionBox(),
     ])));

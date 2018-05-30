@@ -22,7 +22,9 @@ class API {
   Dosages get dosages => _dosages;
   Notes get notes => _notes;
 
-  API(String apiUrl, String lang, int patientId, String token)
+  final String lang;
+
+  API(String apiUrl, this.lang, int patientId, String token)
       : _videos = Videos(apiUrl, lang),
         _login = Login(apiUrl),
         _dosages = Dosages(apiUrl, patientId, token),
