@@ -143,6 +143,12 @@
     "type": "text",
     "placeholders": {}
   },
+     "updateMedicationError": "Er ging iets mis tijdens het updaten. Probeer opnieuw!",
+     "@updateMedicationError": {
+       "description": "Text displayed when the medication taken status could not be updated",
+       "type": "text",
+       "placeholders": {}
+     },
   "faqAskQuestion": "Stel een vraag",
     "@faqAskQuestion": {
       "description": "Heading for the Ask a question form on FAQ page",

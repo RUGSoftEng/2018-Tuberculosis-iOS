@@ -143,6 +143,12 @@
     "type": "text",
     "placeholders": {}
   },
+     "updateMedicationError": "Error while connecting to server. Please try again.",
+     "@updateMedicationError": {
+       "description": "Text displayed when the medication taken status could not be updated",
+       "type": "text",
+       "placeholders": {}
+     },
   "faqAskQuestion": "Ask a question",
     "@faqAskQuestion": {
       "description": "Heading for the Ask a question form on FAQ page",

@@ -202,7 +202,14 @@ class TubuddyStrings {
       desc: 'Log out button on settings page',
       locale: _localeName
   );
-
+  
+  String get updateMedicationError => Intl.message(
+      'Error while connecting to server. Please try again.',
+    name: 'updateMedicationError',
+    desc: 'Text displayed when the medication taken status could not be updated',
+    locale: _localeName
+  );
+  
   String get faqAskQuestion => Intl.message(
     'Ask a question',
     name: 'faqAskQuestion',

@@ -31,23 +31,37 @@ class MedicationTabPage extends StatelessWidget implements TabPage {
 }
 
 final List<MedicationItem> dummyMedicationData = <MedicationItem>[
-  new MedicationItem("Loratidine", "Any Time", 1),
-  new MedicationItem("Differin", "Any Time", 2),
+  new MedicationItem("Loratidine", "Any Time", 1, true, false),
+  new MedicationItem("Differin", "Any Time", 1, true, false)
 ];
 
 class MedicationItem extends StatelessWidget {
-  MedicationItem(this.medicationName, this.recommendedTime, this.recommendedDosage);
+  MedicationItem(this.medicationName, this.recommendedTime,
+      this.recommendedDosage, this.taken, this.afterToday);
 
   final String medicationName;
   final String recommendedTime;
   final int recommendedDosage;
+  final bool taken;
+  final bool afterToday;
 
   @override
   Widget build(BuildContext context) {
     return new ListTile(
-        leading: const Icon(Icons.healing),
+        leading: new Icon(Icons.healing,
+            color: (afterToday
+                ? CupertinoColors.inactiveGray
+                : (taken
+                    ? CupertinoColors.activeGreen
+                    : CupertinoColors.destructiveRed))),
         title: new Text(this.medicationName),
-        subtitle: new Text(recommendedTime + " - " + recommendedDosage.toString() + ' ' + TubuddyStrings.of(context).pillText(recommendedDosage))
-    );
+        subtitle: new Text(
+          recommendedTime +
+              " - " +
+              recommendedDosage.toString() +
+              ' ' +
+              TubuddyStrings.of(context).pillText(recommendedDosage),
+        ),
+        enabled: !afterToday);
   }
 }
