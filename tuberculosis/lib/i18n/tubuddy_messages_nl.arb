@@ -148,5 +148,23 @@
        "description": "Text displayed when the medication taken status could not be updated",
        "type": "text",
        "placeholders": {}
-     }
+     },
+  "faqAskQuestion": "Stel een vraag",
+    "@faqAskQuestion": {
+      "description": "Heading for the Ask a question form on FAQ page",
+      "type": "text",
+      "placeholders": {}
+    },
+    "faqQuestionSubmit": "Verstuur",
+    "@faqQuestionSubmit": {
+      "description": "Submit button text on FAQ page",
+      "type": "text",
+      "placeholders": {}
+    },
+    "faqQuestionSubmitted": "Je vraag is voorgelegd aan jouw arts.",
+    "@faqQuestionSubmitted": {
+      "description": "Notify the user that his question has successfully been submitted",
+      "type": "text",
+      "placeholders": {}
+    }
 }

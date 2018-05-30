@@ -19,6 +19,7 @@ class InformationTabPage extends StatelessWidget implements TabPage {
   Widget build(BuildContext context) {
     return FetchDataWidget(
       getFutureFunction: api.videos.getTopics,
+      language: api.lang,
       builder: (context, data) {
         return new ListView.builder(
           itemBuilder: (BuildContext context, int index) {
@@ -73,6 +74,7 @@ class VideoSelectorScreen extends StatelessWidget {
       ),
       child: FetchDataWidget<List<Video>>(
         getFutureFunction: () => api.videos.getVideos(_topic),
+        language: api.lang,
         builder: (context, data) {
           return Material(child: ListView(children: data.map((v) => ListTile(
             title: Text(v.title),
