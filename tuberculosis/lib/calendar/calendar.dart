@@ -190,7 +190,7 @@ class CalendarState extends State<Calendar> {
     final locale = UserSettings.of(context).getLanguageCode(context);
     Intl.withLocale(locale, () {
       // This inline format is needed otherwise the string does not change when the locale does.
-      displayMonth = (new DateFormat("MMMM yyyy")).format(Utils.firstDayOfWeek(today));
+      displayMonth = (new DateFormat("MMMM yyyy")).format(Utils.firstDayOfMonth(today));
     });
     return new Padding(
         child: new Column(children: [nameAndIconRow, calendarGridView]),
