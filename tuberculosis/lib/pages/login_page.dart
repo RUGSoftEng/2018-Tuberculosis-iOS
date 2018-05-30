@@ -9,46 +9,47 @@ import 'dart:io';
 import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
-  final ValueChanged<String> _userLoggedIn;
+  final ValueChanged<LoggedInUser> _userLoggedIn;
 
   LoginPage(this._userLoggedIn);
 
   @override
-  LoginPageState createState() => new LoginPageState(_userLoggedIn);
+  LoginPageState createState() => new LoginPageState();
 }
 
 class LoginPageState extends State<LoginPage> {
-  final ValueChanged<String> _userLoggedIn;
   final _formKey = new GlobalKey<FormState>();
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
   String _username, _password;
   bool _logInButtonDisabled = false;
 
-  LoginPageState(this._userLoggedIn);
+  LoginPageState();
 
   @override
   Widget build(BuildContext context) {
     return new CupertinoPageScaffold(
-            navigationBar: new CupertinoNavigationBar(
-                middle: Text(TubuddyStrings.of(context).welcomeText)),
-            child: new Scaffold(
-                key: _scaffoldKey,
-                body: new DefaultTextStyle(
-                    style: const TextStyle(
-                      fontFamily: '.SF UI Text',
-                      fontSize: 17.0,
-                      color: CupertinoColors.black,
-                    ),
-                    child: new Padding(
-                        padding: new EdgeInsets.all(30.0),
-                        child: new Container(
-                            child: new Center(child: _loginWidget()))))));
+        navigationBar: new CupertinoNavigationBar(
+            middle: Text(TubuddyStrings.of(context).welcomeText)),
+        child: new Scaffold(
+            key: _scaffoldKey,
+            body: new DefaultTextStyle(
+                style: const TextStyle(
+                  fontFamily: '.SF UI Text',
+                  fontSize: 17.0,
+                  color: CupertinoColors.black,
+                ),
+                child: new Padding(
+                    padding: new EdgeInsets.all(30.0),
+                    child: new Container(
+                        child: new Center(child: _loginWidget()))))));
   }
 
   void _showInSnackbar(String val) {
     _scaffoldKey.currentState
         .showSnackBar(new SnackBar(content: new Text(val)));
   }
+
+  final passwordFocus = FocusNode();
 
   Widget _loginWidget() {
     final logo = new Image.asset('graphics/logo.png', height: 200.0);
@@ -63,6 +64,7 @@ class LoginPageState extends State<LoginPage> {
       onSaved: (val) => _username = val,
       keyboardType: TextInputType.emailAddress,
       autocorrect: false,
+      onFieldSubmitted: (str) => _doFocusPassword(),
     );
 
     final passwordField = new TextFormField(
@@ -74,11 +76,20 @@ class LoginPageState extends State<LoginPage> {
       validator: _validatePassword,
       onSaved: (val) => _password = val,
       obscureText: true,
+      onFieldSubmitted: (str) {
+        _password = str;
+        if (!_logInButtonDisabled) {
+          _processForm();
+        }
+      },
+      focusNode: passwordFocus,
     );
 
     final loginButton = new CupertinoButton(
         onPressed: _logInButtonDisabled ? null : _processForm,
-        child: new Text(_logInButtonDisabled ? TubuddyStrings.of(context).loginBtnInProgressText : TubuddyStrings.of(context).loginBtnText));
+        child: new Text(_logInButtonDisabled
+            ? TubuddyStrings.of(context).loginBtnInProgressText
+            : TubuddyStrings.of(context).loginBtnText));
 
     final forgottenPasswordButton = new CupertinoButton(
         child: Text(
@@ -127,32 +138,23 @@ class LoginPageState extends State<LoginPage> {
   void _handleLogin() async {
     setState(() => _logInButtonDisabled = true);
     if (_username == "demo" && _password == "demo123") {
-      _userLoggedIn("");
+      widget._userLoggedIn(null);
     } else {
       final loginResult = await api.login.doLogin(_username, _password);
       if (loginResult.success) {
-        _userLoggedIn(loginResult.result.token);
+        widget._userLoggedIn(loginResult.result);
       } else {
         _showLogInError(TubuddyStrings.of(context).loginIncorrectCredentials);
       }
-//      http
-//          .post(_apiUrl + "/accounts/login",
-//              body: json.encode({"username": _username, "password": _password}))
-//          .timeout(const Duration(seconds: 5))
-//          .then((response) {
-//        if (response.statusCode == HttpStatus.OK) {
-//          // TODO store received API token somewhere, add blocking spinner.
-//          _userLoggedIn(true);
-//        } else {
-//          _showLogInError("Username or password incorrect.");
-//        }
-//      }).catchError(
-//              (e) => _showLogInError("Error: could not connect to server."));
     }
   }
 
   void _showLogInError(String val) {
     _showInSnackbar(val);
     setState(() => _logInButtonDisabled = false);
+  }
+
+  _doFocusPassword() {
+    FocusScope.of(context).requestFocus(this.passwordFocus);
   }
 }

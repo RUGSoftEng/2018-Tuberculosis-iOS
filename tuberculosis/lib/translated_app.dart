@@ -10,28 +10,30 @@ final GlobalKey userSettings = GlobalKey();
 
 class UserSettingsState {
   final String userToken;
+  final int patientId;
   final String userLanguage;
 
-  UserSettingsState({this.userToken, this.userLanguage});
+  UserSettingsState({this.userToken, this.patientId, this.userLanguage});
 }
 
 class UserSettings extends InheritedWidget {
-
   final TranslatedAppState data;
 
   UserSettings({child, this.data}) : super(child: child);
 
   static TranslatedAppState of(BuildContext context) {
-    final us = (context.inheritFromWidgetOfExactType(UserSettings) as UserSettings);
+    final us =
+        (context.inheritFromWidgetOfExactType(UserSettings) as UserSettings);
     if (us == null) return null;
     return us.data;
   }
 
   @override
   bool updateShouldNotify(UserSettings oldWidget) {
-    return oldWidget.data.userToken != data.userToken || oldWidget.data.userLanguage != data.userLanguage;
+    return oldWidget.data.userToken != data.userToken ||
+        oldWidget.data.userLanguage != data.userLanguage ||
+        oldWidget.data.patientId != data.patientId;
   }
-
 }
 
 class TranslatedApp extends StatefulWidget {
@@ -45,16 +47,18 @@ class TranslatedApp extends StatefulWidget {
 }
 
 class TranslatedAppState extends State<TranslatedApp> {
-
   String userLanguage;
   String userToken;
+  int patientId;
 
   Future<UserSettingsState> getUserSettings() async {
     final prefs = await SharedPreferences.getInstance();
     final userToken = prefs.getString("user_token");
     final userLanguage = prefs.getString("selected_language");
+    final patientId = prefs.getInt("patient_id");
 
-    return UserSettingsState(userLanguage: userLanguage, userToken: userToken);
+    return UserSettingsState(
+        userLanguage: userLanguage, patientId: patientId, userToken: userToken);
   }
 
   Future<bool> setUserToken(String token) async {
@@ -67,6 +71,18 @@ class TranslatedAppState extends State<TranslatedApp> {
     });
 
     return prefs.setString("user_token", token);
+  }
+
+  Future<bool> setPatientId(int id) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (id == null) {
+      return prefs.remove("patient_id");
+    }
+    setState(() {
+      patientId = id;
+    });
+
+    return prefs.setInt("patient_id", id);
   }
 
   void changeLanguage(String language) async {
@@ -90,51 +106,51 @@ class TranslatedAppState extends State<TranslatedApp> {
 
   @override
   Widget build(BuildContext context) {
-    return new FutureBuilder(builder: (context, state) {
-      if (state.connectionState == ConnectionState.done) {
-        userToken = state.data.userToken;
-        userLanguage = state.data.userLanguage;
-      }
+    return new FutureBuilder(
+        builder: (context, state) {
+          if (state.connectionState == ConnectionState.done) {
+            userToken = state.data.userToken;
+            userLanguage = state.data.userLanguage;
+            patientId = state.data.patientId;
+          }
 
-      initializeApi(userLanguage);
+          initializeApi(userLanguage, patientId, userToken);
 
-      return UserSettings(
-          child: new MaterialApp(
-            localizationsDelegates: [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              TubuddyStringsDelegate(userLanguage)
-            ],
-            supportedLocales: [
-              Locale('en', 'US'),
-              Locale('nl', 'NL'),
-            ],
-            localeResolutionCallback: (locale, supported) {
-              if (userLanguage != null && userLanguage.isNotEmpty) {
-                return Locale(userLanguage);
-              } else if (supported.contains(locale)) {
-                return locale;
-              } else {
-                return Locale('en', 'US');
-              }
-            },
-            routes: {
-              '/': (context) {
-                Widget body;
-                if (widget.homeBuilder != null) {
-                  body = widget.homeBuilder(context);
-                } else {
-                  body = widget.home;
-                }
+          return UserSettings(
+              child: new MaterialApp(
+                localizationsDelegates: [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  TubuddyStringsDelegate(userLanguage)
+                ],
+                supportedLocales: [
+                  Locale('en', 'US'),
+                  Locale('nl', 'NL'),
+                ],
+                localeResolutionCallback: (locale, supported) {
+                  if (userLanguage != null && userLanguage.isNotEmpty) {
+                    return Locale(userLanguage);
+                  } else if (supported.contains(locale)) {
+                    return locale;
+                  } else {
+                    return Locale('en', 'US');
+                  }
+                },
+                routes: {
+                  '/': (context) {
+                    Widget body;
+                    if (widget.homeBuilder != null) {
+                      body = widget.homeBuilder(context);
+                    } else {
+                      body = widget.home;
+                    }
 
-                return body;
-              }
-            },
-          ),
-          data: this
-      );
-
-    }, future: getUserSettings());
+                    return body;
+                  }
+                },
+              ),
+              data: this);
+        },
+        future: getUserSettings());
   }
-
 }

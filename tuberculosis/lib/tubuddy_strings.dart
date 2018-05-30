@@ -202,4 +202,25 @@ class TubuddyStrings {
       desc: 'Log out button on settings page',
       locale: _localeName
   );
+
+  String get faqAskQuestion => Intl.message(
+    'Ask a question',
+    name: 'faqAskQuestion',
+    desc: 'Heading for the Ask a question form on FAQ page',
+    locale: _localeName
+  );
+
+  String get faqQuestionSubmit => Intl.message(
+    'Submit',
+    name: 'faqQuestionSubmit',
+    desc: 'Submit button text on FAQ page',
+    locale: _localeName,
+  );
+
+  String get faqQuestionSubmitted => Intl.message(
+    'Your question has been submitted.',
+    name: 'faqQuestionSubmitted',
+    desc: 'Notify the user that his question has successfully been submitted',
+    locale: _localeName,
+  );
 }
