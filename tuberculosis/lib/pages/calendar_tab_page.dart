@@ -47,6 +47,10 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
     }
   }
 
+  void _setDosageTaken(bool taken) {
+    // TODO: do stuff.
+  }
+
   _CalendarTabPageState()
       : monthDosageList = List<Dosage>(),
         todayDosageList = List<Dosage>() {
@@ -90,7 +94,8 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
               dosage.intakeMoment,
               dosage.amount,
               dosage.taken,
-              dosage.date.isAfter(today));
+              dosage.date.isAfter(today),
+              DosageToggle(_setDosageTaken, dosage.taken));
         }).toList(),
         shrinkWrap: false,
         padding: EdgeInsets.zero,
@@ -101,13 +106,14 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
 
 class DosageItem extends StatelessWidget {
   DosageItem(this.medicationName, this.recommendedTime, this.recommendedDosage,
-      this.taken, this.afterToday);
+      this.taken, this.afterToday, this.toggle);
 
   final String medicationName;
   final String recommendedTime;
   final int recommendedDosage;
   final bool taken;
   final bool afterToday;
+  final DosageToggle toggle;
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +132,19 @@ class DosageItem extends StatelessWidget {
               ' ' +
               TubuddyStrings.of(context).pillText(recommendedDosage),
         ),
-        enabled: !afterToday);
+        enabled: !afterToday,
+        trailing: afterToday ? null : toggle);
+  }
+}
+
+class DosageToggle extends StatelessWidget {
+  final ValueChanged<bool> onToggle;
+  final bool enabled;
+
+  DosageToggle(this.onToggle, this.enabled);
+
+  @override
+  Widget build(BuildContext context) {
+    return new Checkbox(value: enabled, onChanged: onToggle);
   }
 }
