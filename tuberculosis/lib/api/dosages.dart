@@ -70,8 +70,6 @@ class Dosages {
       dosages.add(new Dosage.fromJson(dosage));
     }
 
-    print(dosages);
-
     return dosages;
   }
 }
