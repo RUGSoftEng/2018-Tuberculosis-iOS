@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:Tubuddy/api/api.dart';
 import 'package:Tubuddy/calendar/calendar.dart';
 import 'package:Tubuddy/translated_app.dart';
@@ -47,10 +49,6 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
     }
   }
 
-  void _setDosageTaken(bool taken) {
-    // TODO: do stuff.
-  }
-
   _CalendarTabPageState()
       : monthDosageList = List<Dosage>(),
         todayDosageList = List<Dosage>() {
@@ -83,57 +81,142 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
       selectedDate = DateTime(1980, 1, 1);
       onDateSelected(today);
     }
-    return new Column(children: <Widget>[
+    return Scaffold(
+        body: new Column(children: <Widget>[
       Calendar(isExpandable: true, onDateSelected: onDateSelected),
       Divider(color: CupertinoColors.lightBackgroundGray, height: 5.0),
       Expanded(
           child: ListView(
         children: todayDosageList.map((dosage) {
           return DosageItem(
-              dosage.medicineName,
-              dosage.intakeMoment,
-              dosage.amount,
-              dosage.taken,
-              dosage.date.isAfter(today),
-              DosageToggle(_setDosageTaken, dosage.taken));
+            dosage,
+            onError: (context) => Scaffold
+                .of(context)
+                .showSnackBar(SnackBar(content: Text('Error while connecting to server. Please try again.'))),
+            onSuccess: (updatedDosage) {
+              setState(() {
+                int dosageIndex = monthDosageList.indexOf(dosage);
+                monthDosageList.replaceRange(
+                    dosageIndex, dosageIndex + 1, [updatedDosage]);
+              });
+              _updateDosagesForSelectedDate();
+            },
+          );
         }).toList(),
         shrinkWrap: false,
         padding: EdgeInsets.zero,
       )),
-    ], mainAxisSize: MainAxisSize.max);
+    ], mainAxisSize: MainAxisSize.max));
   }
 }
 
 class DosageItem extends StatelessWidget {
-  DosageItem(this.medicationName, this.recommendedTime, this.recommendedDosage,
-      this.taken, this.afterToday, this.toggle);
+  final Dosage dosage;
+  final ValueChanged<BuildContext> onError;
+  final ValueChanged<Dosage> onSuccess;
 
-  final String medicationName;
-  final String recommendedTime;
-  final int recommendedDosage;
-  final bool taken;
-  final bool afterToday;
-  final DosageToggle toggle;
+  DosageItem(this.dosage, {this.onError, this.onSuccess});
+
+  void _setDosageTaken(BuildContext context, bool taken) async {
+    Dosage updatedDosage = new Dosage.fromDosage(dosage, taken);
+    bool success = await api.dosages.updateDosageTaken(updatedDosage);
+    if (!success) {
+      if (onError != null) onError(context);
+    } else {
+      if (onSuccess != null) onSuccess(updatedDosage);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final today = DateTime.now();
+    final afterToday = dosage.date.isAfter(today);
+
     return new ListTile(
-        leading: new Icon(Icons.healing,
-            color: (afterToday
-                ? CupertinoColors.inactiveGray
-                : (taken
-                    ? CupertinoColors.activeGreen
-                    : CupertinoColors.destructiveRed))),
-        title: new Text(this.medicationName),
+        leading: DosageIcon(dosage: dosage),
+        title: new Text(dosage.medicineName),
         subtitle: new Text(
-          recommendedTime +
+          dosage.intakeMoment +
               " - " +
-              recommendedDosage.toString() +
+              dosage.amount.toString() +
               ' ' +
-              TubuddyStrings.of(context).pillText(recommendedDosage),
+              TubuddyStrings.of(context).pillText(dosage.amount),
         ),
         enabled: !afterToday,
-        trailing: afterToday ? null : toggle);
+        trailing: afterToday
+            ? null
+            : DosageToggle(
+                onToggle: ((bool taken) => _setDosageTaken(context, taken)),
+                enabled: dosage.taken,
+              ));
+  }
+}
+
+class DosageIcon extends StatefulWidget {
+  final Dosage dosage;
+
+  const DosageIcon({Key key, this.dosage}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _DosageIcon();
+}
+
+class _DosageIcon extends State<DosageIcon>
+    with SingleTickerProviderStateMixin {
+  Animation<Color> animation;
+  Animation<double> rotateAnimation;
+  AnimationController controller;
+  bool taken;
+
+  initState() {
+    super.initState();
+    controller = new AnimationController(
+      vsync: this,
+    );
+
+    taken = widget.dosage.taken;
+    startAnimation(const Duration(milliseconds: 0));
+  }
+
+  startAnimation(Duration duration) {
+    animation = new ColorTween(
+            begin: widget.dosage.taken
+                ? CupertinoColors.destructiveRed
+                : CupertinoColors.activeGreen,
+            end: widget.dosage.taken
+                ? CupertinoColors.activeGreen
+                : CupertinoColors.destructiveRed)
+        .animate(controller)
+          ..addListener(() => setState(() {}));
+
+    rotateAnimation = new Tween(
+            begin: widget.dosage.taken ? 0.0 : pi,
+            end: (widget.dosage.taken ? 1 : 2) * pi)
+        .animate(controller);
+
+    controller.duration = duration;
+    controller.reset();
+    controller.forward();
+  }
+
+  Widget build(BuildContext context) {
+    final today = DateTime.now();
+    if (widget.dosage.date.isAfter(today)) {
+      return Icon(Icons.healing, color: CupertinoColors.inactiveGray);
+    }
+
+    if (taken != widget.dosage.taken) {
+      taken = widget.dosage.taken;
+      startAnimation(const Duration(milliseconds: 350));
+    }
+
+    return Transform(
+      child: Icon(Icons.healing, color: animation.value),
+      alignment: Alignment.center,
+      transform: new Matrix4.rotationY(rotateAnimation.value)
+        ..rotateX(rotateAnimation.value)
+        ..rotateZ(rotateAnimation.value),
+    );
   }
 }
 
@@ -141,7 +224,7 @@ class DosageToggle extends StatelessWidget {
   final ValueChanged<bool> onToggle;
   final bool enabled;
 
-  DosageToggle(this.onToggle, this.enabled);
+  DosageToggle({this.onToggle, this.enabled});
 
   @override
   Widget build(BuildContext context) {
