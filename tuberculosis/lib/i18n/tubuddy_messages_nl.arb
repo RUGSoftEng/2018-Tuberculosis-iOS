@@ -142,5 +142,11 @@
     "description": "Log out button on settings page",
     "type": "text",
     "placeholders": {}
-  }
+  },
+     "updateMedicationError": "Er ging iets mis tijdens het updaten. Probeer opnieuw!",
+     "@updateMedicationError": {
+       "description": "Text displayed when the medication taken status could not be updated",
+       "type": "text",
+       "placeholders": {}
+     }
 }

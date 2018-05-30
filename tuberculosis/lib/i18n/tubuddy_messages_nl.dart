@@ -47,6 +47,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "quizResult" : m3,
     "quizTitle" : MessageLookupByLibrary.simpleMessage("Quiz"),
     "settings" : MessageLookupByLibrary.simpleMessage("Instellingen"),
+    "updateMedicationError" : MessageLookupByLibrary.simpleMessage("Er ging iets mis tijdens het updaten. Probeer opnieuw!"),
     "username" : MessageLookupByLibrary.simpleMessage("Gebruikersnaam"),
     "welcomeText" : MessageLookupByLibrary.simpleMessage("Welkom bij Tubuddy!")
   };

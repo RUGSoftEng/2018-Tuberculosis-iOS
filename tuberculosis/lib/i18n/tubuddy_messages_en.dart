@@ -47,6 +47,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "quizResult" : m3,
     "quizTitle" : MessageLookupByLibrary.simpleMessage("Quiz"),
     "settings" : MessageLookupByLibrary.simpleMessage("Settings"),
+    "updateMedicationError" : MessageLookupByLibrary.simpleMessage("Error while connecting to server. Please try again."),
     "username" : MessageLookupByLibrary.simpleMessage("Username"),
     "welcomeText" : MessageLookupByLibrary.simpleMessage("Welcome to Tubuddy!")
   };

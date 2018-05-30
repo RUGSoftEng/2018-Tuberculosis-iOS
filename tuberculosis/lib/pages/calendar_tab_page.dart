@@ -92,7 +92,7 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
             dosage,
             onError: (context) => Scaffold
                 .of(context)
-                .showSnackBar(SnackBar(content: Text('Error while connecting to server. Please try again.'))),
+                .showSnackBar(SnackBar(content: Text(TubuddyStrings.of(context).updateMedicationError))),
             onSuccess: (updatedDosage) {
               setState(() {
                 int dosageIndex = monthDosageList.indexOf(dosage);

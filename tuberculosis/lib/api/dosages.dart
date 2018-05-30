@@ -99,6 +99,7 @@ class Dosages {
   }
 
   Future<bool> updateDosageTaken(Dosage dosage) async {
+    bool catastrophicFailure = false;
     final response = await http.post(
         "$_apiUrl/accounts/patients/$_patientId/dosages/scheduled",
         headers: {"access_token": _token, "Content-Type": "application/json"},
@@ -106,7 +107,11 @@ class Dosages {
           "dosage": dosage.toJson(),
           "date": formatter.format(dosage.date),
           "taken": dosage.taken
-        }]));
+        }])).catchError((e) {
+      catastrophicFailure = true;
+    });
+
+    if (catastrophicFailure) return false;
 
     return (response.statusCode == HttpStatus.OK);
   }
