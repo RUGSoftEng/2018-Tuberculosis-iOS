@@ -28,7 +28,7 @@ class _FaqQuestionBox extends StatelessWidget {
           child: Text(TubuddyStrings.of(context).faqQuestionSubmit),
           onPressed: () {
             _showInSnackbar(context, TubuddyStrings.of(context).faqQuestionSubmitted);
-            print("Text: " + faqTxtController.value.text);
+            api.notes.addNote(faqTxtController.text);
             faqTxtController.text = '';
           },
         )
