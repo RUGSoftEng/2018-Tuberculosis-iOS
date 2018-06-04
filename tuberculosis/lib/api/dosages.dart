@@ -13,6 +13,7 @@ class Dosage extends StatelessWidget {
   final int amount;
   final String medicineName;
   final DateTime date;
+  final DateTime takeBeforeDate;
   final bool taken;
 
   Dosage(
@@ -20,6 +21,7 @@ class Dosage extends StatelessWidget {
       this.amount,
       this.medicineName,
       this.date,
+      this.takeBeforeDate,
       this.taken});
 
   @override
@@ -28,20 +30,30 @@ class Dosage extends StatelessWidget {
   }
 
   factory Dosage.fromJson(Map<String, dynamic> json) {
-    final durationParts = (json['dosage']['intake_moment'] as String)
+    final durationPartsStart = (json['dosage']['intake_interval_start'] as String)
+        .split(':')
+        .map((part) => int.parse(part))
+        .toList(growable: false);
+    final durationPartsEnd = (json['dosage']['intake_interval_end'] as String)
         .split(':')
         .map((part) => int.parse(part))
         .toList(growable: false);
     final date = formatter.parse(json['date']);
     final dateWithTime = date.add(Duration(
-        hours: durationParts[0],
-        minutes: durationParts[1],
-        seconds: durationParts[2]));
+        hours: durationPartsStart[0],
+        minutes: durationPartsStart[1],
+        seconds: durationPartsStart[2]));
+    final dateTakeBefore = date.add(Duration(
+      hours: durationPartsEnd[0],
+      minutes: durationPartsEnd[1],
+      seconds: durationPartsEnd[2],
+    ));
     return new Dosage(
-        intakeMoment: json['dosage']['intake_moment'],
+        intakeMoment: json['dosage']['intake_interval_start'],
         amount: json['dosage']['amount'],
         medicineName: json['dosage']['medicine']['name'],
         date: dateWithTime,
+        takeBeforeDate: dateTakeBefore,
         taken: json['taken']);
   }
 
