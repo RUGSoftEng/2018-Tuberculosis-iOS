@@ -89,10 +89,11 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
           child: ListView(
         children: todayDosageList.map((dosage) {
           return DosageItem(
+            ValueKey<DateTime>(selectedDate),
             dosage,
-            onError: (context) => Scaffold
-                .of(context)
-                .showSnackBar(SnackBar(content: Text(TubuddyStrings.of(context).updateMedicationError))),
+            onError: (context) => Scaffold.of(context).showSnackBar(SnackBar(
+                content:
+                    Text(TubuddyStrings.of(context).updateMedicationError))),
             onSuccess: (updatedDosage) {
               setState(() {
                 int dosageIndex = monthDosageList.indexOf(dosage);
@@ -111,11 +112,12 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
 }
 
 class DosageItem extends StatelessWidget {
+  final Key key;
   final Dosage dosage;
   final ValueChanged<BuildContext> onError;
   final ValueChanged<Dosage> onSuccess;
 
-  DosageItem(this.dosage, {this.onError, this.onSuccess});
+  DosageItem(this.key, this.dosage, {this.onError, this.onSuccess});
 
   void _setDosageTaken(BuildContext context, bool taken) async {
     Dosage updatedDosage = new Dosage.fromDosage(dosage, taken);
@@ -221,10 +223,11 @@ class _DosageIcon extends State<DosageIcon>
 }
 
 class DosageToggle extends StatelessWidget {
+  final Key key;
   final ValueChanged<bool> onToggle;
   final bool enabled;
 
-  DosageToggle({this.onToggle, this.enabled});
+  DosageToggle({this.key, this.onToggle, this.enabled});
 
   @override
   Widget build(BuildContext context) {
