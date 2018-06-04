@@ -49,11 +49,7 @@ class MedicationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return new ListTile(
         leading: new Icon(Icons.healing,
-            color: (afterToday
-                ? CupertinoColors.inactiveGray
-                : (taken
-                    ? CupertinoColors.activeGreen
-                    : CupertinoColors.destructiveRed))),
+            color: CupertinoColors.inactiveGray),
         title: new Text(this.medicationName),
         subtitle: new Text(
           recommendedTime +
