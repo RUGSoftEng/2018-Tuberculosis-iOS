@@ -11,8 +11,14 @@ import 'package:Tubuddy/pages/tab_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:Tubuddy/api/dosages.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_local_notifications/initialization_settings.dart';
 import 'package:flutter_local_notifications/notification_details.dart';
+import 'package:flutter_local_notifications/platform_specifics/android/initialization_settings_android.dart';
 import 'package:flutter_local_notifications/platform_specifics/android/notification_details_android.dart';
+import 'package:flutter_local_notifications/platform_specifics/android/styles/big_text_style_information.dart';
+import 'package:flutter_local_notifications/platform_specifics/android/styles/default_style_information.dart';
+import 'package:flutter_local_notifications/platform_specifics/android/styles/inbox_style_information.dart';
+import 'package:flutter_local_notifications/platform_specifics/ios/initialization_settings_ios.dart';
 import 'package:flutter_local_notifications/platform_specifics/ios/notification_details_ios.dart';
 
 
@@ -39,6 +45,7 @@ class CalendarTabPage extends StatefulWidget implements TabPage {
 }
 
 class _CalendarTabPageState extends State<CalendarTabPage> {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   ValueChanged<DateTime> onDateSelected;
   DateTime selectedDate;
   List<Dosage> monthDosageList;
@@ -77,9 +84,18 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
     };
   }
 
-
+  void initNotifications() {
+    var initializationSettingsAndroid =
+    new InitializationSettingsAndroid('app_icon');
+    var initializationSettingsIOS = new InitializationSettingsIOS();
+    var initializationSettings = new InitializationSettings(
+      initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
 
   void scheduleNotifications(DateTime from) async {
+    initNotifications();
     api.dosages
       .getDosages(DateTime(from.year, from.month, 1),
       DateTime(from.year + 1, from.month, 1))
@@ -87,16 +103,14 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
       setState(() {
         dosages.forEach((dosage)
         {
-          print(dosage.intakeMoment);
-          var intakeMoment = DateTime.parse(dosage.intakeMoment);
-          _scheduleNotification(dosage.medicineName, intakeMoment);
+          print(dosage.takeBeforeDate);
+          _scheduleNotification(dosage.medicineName, dosage.takeBeforeDate);
         });
       });
     });
   }
 
   Future _scheduleNotification(String medicineName, DateTime intakeMoment) async {
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
     var androidPlatformChannelSpecifics = new NotificationDetailsAndroid(
       'dummyId',
       'dummyChannelName',
