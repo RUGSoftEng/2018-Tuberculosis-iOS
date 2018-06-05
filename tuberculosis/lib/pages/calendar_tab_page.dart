@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:async';
 
 import 'package:Tubuddy/api/api.dart';
 import 'package:Tubuddy/calendar/calendar.dart';
@@ -9,6 +10,11 @@ import 'package:flutter/widgets.dart';
 import 'package:Tubuddy/pages/tab_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:Tubuddy/api/dosages.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_local_notifications/notification_details.dart';
+import 'package:flutter_local_notifications/platform_specifics/android/notification_details_android.dart';
+import 'package:flutter_local_notifications/platform_specifics/ios/notification_details_ios.dart';
+
 
 class CalendarTabPage extends StatefulWidget implements TabPage {
   static String getTitleStatic(BuildContext context) {
@@ -71,6 +77,42 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
     };
   }
 
+
+
+  void scheduleNotifications(DateTime from) async {
+    api.dosages
+      .getDosages(DateTime(from.year, from.month, 1),
+      DateTime(from.year + 1, from.month, 1))
+      .then((dosages) {
+      setState(() {
+        dosages.forEach((dosage)
+        {
+          print(dosage.intakeMoment);
+          var intakeMoment = DateTime.parse(dosage.intakeMoment);
+          _scheduleNotification(dosage.medicineName, intakeMoment);
+        });
+      });
+    });
+  }
+
+  Future _scheduleNotification(String medicineName, DateTime intakeMoment) async {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+    var androidPlatformChannelSpecifics = new NotificationDetailsAndroid(
+      'dummyId',
+      'dummyChannelName',
+      'dummyChannelDescription');
+    var iOSPlatformChannelSpecifics =
+    new NotificationDetailsIOS();
+    var platformChannelSpecifics = new NotificationDetails(
+      androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.schedule(
+      0,
+      'Don\'t forget to take your $medicineName!',
+      'You should take your $medicineName at $intakeMoment.',
+      intakeMoment,
+      platformChannelSpecifics);
+  }
+
   @override
   Widget build(BuildContext context) {
     final DateTime today = DateTime.now();
@@ -81,6 +123,7 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
       selectedDate = DateTime(1980, 1, 1);
       onDateSelected(today);
     }
+    scheduleNotifications(today);
     return Scaffold(
         body: new Column(children: <Widget>[
       Calendar(isExpandable: true, onDateSelected: onDateSelected),
