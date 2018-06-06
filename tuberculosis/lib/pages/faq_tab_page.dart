@@ -1,43 +1,79 @@
+import 'package:Tubuddy/api/api.dart';
+import 'package:Tubuddy/api/faq.dart';
+import 'package:Tubuddy/api/fetch_data_widget.dart';
+import 'package:Tubuddy/translated_app.dart';
+import 'package:Tubuddy/tubuddy_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:Tubuddy/pages/tab_page.dart';
 import 'package:flutter/cupertino.dart';
 
-class FaqTabPage extends StatelessWidget implements TabPage {
-  static final Text title = const Text("FAQ");
-  static final Icon icon = const Icon(CupertinoIcons.conversation_bubble);
+class _FaqQuestionBox extends StatelessWidget {
+
+  final faqTxtController = new TextEditingController();
+
+  void _showInSnackbar(BuildContext context, String txt) {
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text(txt),));
+  }
+
+  Widget _buildQuestionBox(BuildContext context) {
+    return Column(
+      children: [
+        Text(TubuddyStrings.of(context).faqAskQuestion, style: Theme.of(context).textTheme.title,),
+        TextFormField(
+          keyboardType: TextInputType.multiline,
+          maxLines: 5,
+          controller: faqTxtController,
+        ),
+        CupertinoButton(
+          child: Text(TubuddyStrings.of(context).faqQuestionSubmit),
+          onPressed: () {
+            _showInSnackbar(context, TubuddyStrings.of(context).faqQuestionSubmitted);
+            api.notes.addNote(faqTxtController.text);
+            faqTxtController.text = '';
+          },
+        )
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return new ListView.builder(
-        itemBuilder: (BuildContext context, int index) {
-          return new FAQEntryItem(dummyFAQ[index]);
-        },
-        itemCount: 4);
+    return _buildQuestionBox(context);
+  }
+
+}
+
+class FaqTabPage extends StatelessWidget implements TabPage {
+  static final Icon icon = const Icon(CupertinoIcons.conversation_bubble);
+
+  static String getTitleStatic(BuildContext context) {
+    return TubuddyStrings.of(context).faqTitle;
   }
 
   @override
-  Text getTitle() {
-    return title;
+  Widget build(BuildContext context) {
+    return Scaffold(body: SafeArea(child: Column(children: [
+      FetchDataWidget<List<FAQEntry>>(
+        builder: (context, entries) {
+          return Expanded(child: ListView.builder(
+              itemBuilder: (BuildContext context, int index) {
+                return new FAQEntryItem(entries[index % entries.length]);
+              },
+              itemCount: entries.length * 2,
+          ));
+        },
+        getFutureFunction: api.faq.getEntries,
+        language: api.lang,
+      ),
+      _FaqQuestionBox(),
+    ])));
   }
-}
 
-final List<FAQEntry> dummyFAQ = <FAQEntry>[
-  new FAQEntry("Question 1",
-      "An nam harum appareat repudiandae, eu vix quodsi inciderint. Minim clita gloriatur et eos, civibus lucilius incorrupte an vel, at eam putent luptatum convenire. No simul assueverit mel, nisl illum scribentur has ea. Dicunt aperiri definiebas vim in, mel alii molestie ei."),
-  new FAQEntry("Question 2",
-      "Id veniam scripta inermis mei, has ut choro tempor commune, sed eu tota populo. Probo delectus eu vix. Idque munere posidonium qui no. Pri accusamus temporibus id, case appetere convenire at vis, ei legere scribentur delicatissimi nam. Vix at affert neglegentur, purto integre his ei."),
-  new FAQEntry("Question 3",
-      "No elaboraret scribentur reformidans vim, sint meis contentiones et usu. Te ferri expetenda mei, ius an possim sapientem consulatu, no animal perpetua sadipscing vix. Sed eu veniam vivendum. In cum everti splendide, ea sed quas timeam posidonium. Mei error aeterno detracto ad, ex case veri ponderum vel. Idque lorem eu sea. Sit tota perpetua ad."),
-  new FAQEntry("Question 4",
-      "Sonet adolescens duo ea, eum eu idque dicta ancillae, mel ne illum placerat praesent. Pri ei iisque voluptua consequuntur, sumo singulis id vel. Pri ei nusquam oportere torquatos, eum ea deleniti deterruisset, an mea labores vivendum delicata. Fierent similique his ad, sit decore utinam ei. Vis apeirian recusabo theophrastus at, eu per tation nominati.")
-];
-
-class FAQEntry {
-  FAQEntry(this.question, this.answer);
-
-  final String question;
-  final String answer;
+  @override
+  Text getTitle(BuildContext context) {
+    return Text(FaqTabPage.getTitleStatic(context));
+  }
 }
 
 class FAQEntryItem extends StatelessWidget {

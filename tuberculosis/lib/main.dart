@@ -1,7 +1,13 @@
+import 'dart:async';
+import 'package:Tubuddy/api/login.dart';
 import 'package:Tubuddy/pages/pages.dart';
+import 'package:Tubuddy/tubuddy_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:Tubuddy/translated_app.dart';
+import 'package:tuple/tuple.dart';
 
 void main() {
   // Disable rotation
@@ -17,29 +23,28 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   DateTime selectedDate;
-  bool _userLoggedIn = false; // replace with actual check in the future.
 
   _MyAppState() : selectedDate = new DateTime.now();
 
-  Widget getLoggedInPage() {
+  Widget getLoggedInPage(BuildContext context) {
     return new CupertinoTabScaffold(
       tabBar: new CupertinoTabBar(
         items: <BottomNavigationBarItem>[
           new BottomNavigationBarItem(
             icon: CalendarTabPage.icon,
-            title: CalendarTabPage.title,
+            title: Text(TubuddyStrings.of(context).calendarTitle),
           ),
           new BottomNavigationBarItem(
             icon: MedicationTabPage.icon,
-            title: MedicationTabPage.title,
+            title: Text(TubuddyStrings.of(context).medicationTitle),
           ),
           new BottomNavigationBarItem(
             icon: InformationTabPage.icon,
-            title: InformationTabPage.title,
+            title: Text(TubuddyStrings.of(context).informationTitle),
           ),
           new BottomNavigationBarItem(
             icon: FaqTabPage.icon,
-            title: FaqTabPage.title,
+            title: Text(TubuddyStrings.of(context).faqTitle),
           ),
         ],
       ),
@@ -55,16 +60,12 @@ class _MyAppState extends State<MyApp> {
               TabPage pageContent;
               switch (index) {
                 case 0:
-                  pageContent = new CalendarTabPage(
-                      selectedDate,
-                          (DateTime date) => setState(() {
-                        selectedDate = date;
-                      }));
+                  pageContent = new CalendarTabPage(DateTime.now());
                   break;
                 case 1:
                   List<MedicationItem> pills = dummyMedicationData;
                   if (selectedDate.day != (new DateTime.now()).day) {
-                    pills = [new MedicationItem("Fissa", "Any Time", 1)];
+                    pills = [new MedicationItem("Fissa", "Any Time", 1, true, false)];
                   }
                   pageContent = new MedicationTabPage(pills);
                   break;
@@ -77,7 +78,28 @@ class _MyAppState extends State<MyApp> {
               }
               return new CupertinoPageScaffold(
                   navigationBar: new CupertinoNavigationBar(
-                      middle: pageContent.getTitle()),
+                    middle: pageContent.getTitle(context),
+                    trailing: GestureDetector(
+                        child: Icon(
+                            IconData(0xf43c,
+                                fontFamily: 'CupertinoIcons',
+                                fontPackage: 'cupertino_icons'),
+                            size: 28.0,
+                            color: CupertinoColors.black),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              new CupertinoPageRoute(
+                                  builder: (context) => SettingsPage(() async {
+                                        await (userSettings.currentState
+                                                as TranslatedAppState)
+                                            .setUserToken("");
+                                        // DO NOT REMOVE THE FOLLOWING LINE
+                                        // This triggers an update of this widget as it does not happen automatically.
+                                        setState(() {});
+                                      })));
+                        }),
+                  ),
                   child: new Material(child: pageContent));
             },
           ),
@@ -86,20 +108,29 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Widget getPage() {
+  Widget getPage(BuildContext context) {
+    final state = UserSettings.of(context);
+    final _userLoggedIn = (state != null &&
+        state.userToken != null &&
+        state.userToken.isNotEmpty);
+
     if (_userLoggedIn) {
-      return getLoggedInPage();
+      return getLoggedInPage(context);
     } else {
-      return new LoginPage((bool loggedIn) => setState(() {
-        _userLoggedIn = loggedIn;
-      }));
+      return new LoginPage((LoggedInUser user) {
+        (userSettings.currentState as TranslatedAppState)
+            .setUserToken(user.token);
+        (userSettings.currentState as TranslatedAppState)
+            .setPatientId(user.id);
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      home: getPage()
+    return TranslatedApp(
+      key: userSettings,
+      homeBuilder: getPage,
     );
   }
 }

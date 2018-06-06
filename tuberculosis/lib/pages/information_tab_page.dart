@@ -1,34 +1,41 @@
+import 'package:Tubuddy/api/api.dart';
+import 'package:Tubuddy/api/fetch_data_widget.dart';
+import 'package:Tubuddy/tubuddy_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:Tubuddy/pages/tab_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:Tubuddy/quiz/quiz.dart';
 
 class InformationTabPage extends StatelessWidget implements TabPage {
-  static final Text title = const Text("Information");
   static final Icon icon = const Icon(CupertinoIcons.info);
+
+  static String getTitleStatic(BuildContext context) {
+    return TubuddyStrings.of(context).informationTitle;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return new ListView.builder(
-        itemBuilder: (BuildContext context, int index) {
-          return new InfoEntryItem(dummyInfo[index]);
-        },
-        itemCount: 4);
+    return FetchDataWidget(
+      getFutureFunction: api.videos.getTopics,
+      language: api.lang,
+      builder: (context, data) {
+        return new ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            return new InfoEntryItem(new InfoEntry(data[index]));
+          },
+          itemCount: data.length,
+        );
+      }
+    );
   }
 
   @override
-  Text getTitle() {
-    return title;
+  Text getTitle(BuildContext context) {
+    return Text(InformationTabPage.getTitleStatic(context));
   }
 }
-
-final List<InfoEntry> dummyInfo = <InfoEntry>[
-  new InfoEntry("General information"),
-  new InfoEntry("Symptoms"),
-  new InfoEntry("Treatment"),
-  new InfoEntry("Other")
-];
 
 class InfoEntry {
   InfoEntry(this.topic);
@@ -49,53 +56,98 @@ class InfoEntryItem extends StatelessWidget {
           Navigator.push(
               context,
               new CupertinoPageRoute(
-                  builder: (context) => new VideoScreen(infoEntry.topic)));
+                  builder: (context) => VideoSelectorScreen(infoEntry.topic)));
         });
   }
 }
 
-class VideoScreen extends StatelessWidget {
-  const VideoScreen(this._topic);
+class VideoSelectorScreen extends StatelessWidget {
+  const VideoSelectorScreen(this._topic);
 
   final String _topic;
-  final _apiUrl =
-      "http://192.168.50.4:2002/api"; // TODO change this to non-local server once it's up
 
   @override
   Widget build(BuildContext context) {
-    List<String> sampleData = <String>[
-      "https://www.youtube.com/watch?v=yR51KVF4OX0",
-      "https://www.youtube.com/watch?v=yR51KVF4OX0"
-    ];
     return new CupertinoPageScaffold(
         navigationBar: new CupertinoNavigationBar(
-          middle: new Text(_topic),
+        middle: new Text(_topic),
+      ),
+      child: FetchDataWidget<List<Video>>(
+        getFutureFunction: () => api.videos.getVideos(_topic),
+        language: api.lang,
+        builder: (context, data) {
+          return Material(child: ListView(children: data.map((v) => ListTile(
+            title: Text(v.title),
+            onTap: () => Navigator.push(
+                context,
+                new CupertinoPageRoute(
+                    builder: (context) => VideoScreen(v)
+                )
+            ),
+          )).toList(),));
+        },
+      )
+    );
+  }
+}
+
+class VideoScreen extends StatelessWidget {
+  const VideoScreen(this._video);
+
+  final Video _video;
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> children = List<Widget>();
+
+    children.add(new GestureDetector(
+      onTap: () => _openVideo(_video.reference),
+      child: new Image.network(
+          "http://img.youtube.com/vi/" +
+              getIdFromUrl(_video.reference) +
+              "/hqdefault.jpg",
+          fit: BoxFit.cover),
+    ));
+
+    if (_video.quiz != null) {
+      children.add(new QuizWidget(_video.quiz.questions));
+    }
+
+    return new CupertinoPageScaffold(
+        navigationBar: new CupertinoNavigationBar(
+          middle: new Text(_video.title),
         ),
         child: new Material(
             child: new SafeArea(
-                child: new GridView.count(
-                    primary: false,
-                    padding: const EdgeInsets.all(20.0),
-                    crossAxisSpacing: 10.0,
-                    crossAxisCount: 2,
-                    children: sampleData.map((String url) {
-                      return new GridTile(
-                          child: new GestureDetector(
-                              onTap: () => _openVideo(url),
-                              child: new Image.network(
-                                  "http://img.youtube.com/vi/" +
-                                      getIdFromUrl(url) +
-                                      "/hqdefault.jpg",
-                                  fit: BoxFit.cover)));
-                    }).toList()))));
+                child: new Column(
+                  children: children,
+                ))));
   }
 
   String getIdFromUrl(String url) {
-    return url.substring(url.lastIndexOf("=") + 1);
-  }
-
-  void _showSnackbar(BuildContext context, String message) {
-    Scaffold.of(context).showSnackBar(new SnackBar(content: new Text(message)));
+    if (url.startsWith('https://')) {
+      url = url.substring('https://'.length);
+    }
+    if (url.startsWith('http://')) {
+      url = url.substring('http://'.length);
+    }
+    if (url.startsWith('www.')) {
+      url = url.substring('www.'.length);
+    }
+    if (url.startsWith('youtu.be')) {
+      int end = url.indexOf('&');
+      if (end == -1) {
+        end = url.length;
+      }
+      return url.substring(url.indexOf('/') + 1, end);
+    } else {
+      int start = url.indexOf("v=") + 2;
+      int end = url.indexOf('&', start);
+      if (end == -1) {
+        end = url.length;
+      }
+      return url.substring(start, end);
+    }
   }
 
   _openVideo(String url) async {
