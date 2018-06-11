@@ -20,7 +20,7 @@ class FAQ {
   FAQ(this._apiUrl, this._lang);
 
   Future<List<FAQEntry>> getEntries() async {
-    final response = await http.get(_apiUrl + "/general/faq?language=$_lang");
+    final response = await http.get(_apiUrl + "/general/faqs?language=$_lang");
     final responseJson = await json.decode(response.body);
 
     List<FAQEntry> entries = [];
