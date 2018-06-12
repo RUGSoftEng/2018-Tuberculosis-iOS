@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'dart:async';
-
+import 'package:intl/intl.dart';
 import 'package:Tubuddy/api/api.dart';
 import 'package:Tubuddy/calendar/calendar.dart';
 import 'package:Tubuddy/translated_app.dart';
@@ -119,10 +119,12 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
     new NotificationDetailsIOS();
     var platformChannelSpecifics = new NotificationDetails(
       androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    final formatter = new DateFormat('jm');
+
     await flutterLocalNotificationsPlugin.schedule(
       0,
       'Don\'t forget to take your $medicineName!',
-      'You should take your $medicineName at $intakeMoment.',
+      'Take your $medicineName at ${formatter.format(intakeMoment)}.',
       intakeMoment,
       platformChannelSpecifics);
   }
