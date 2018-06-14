@@ -1,5 +1,6 @@
 import 'dart:math';
-
+import 'dart:async';
+import 'package:intl/intl.dart';
 import 'package:Tubuddy/api/api.dart';
 import 'package:Tubuddy/calendar/calendar.dart';
 import 'package:Tubuddy/translated_app.dart';
@@ -9,6 +10,17 @@ import 'package:flutter/widgets.dart';
 import 'package:Tubuddy/pages/tab_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:Tubuddy/api/dosages.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_local_notifications/initialization_settings.dart';
+import 'package:flutter_local_notifications/notification_details.dart';
+import 'package:flutter_local_notifications/platform_specifics/android/initialization_settings_android.dart';
+import 'package:flutter_local_notifications/platform_specifics/android/notification_details_android.dart';
+import 'package:flutter_local_notifications/platform_specifics/android/styles/big_text_style_information.dart';
+import 'package:flutter_local_notifications/platform_specifics/android/styles/default_style_information.dart';
+import 'package:flutter_local_notifications/platform_specifics/android/styles/inbox_style_information.dart';
+import 'package:flutter_local_notifications/platform_specifics/ios/initialization_settings_ios.dart';
+import 'package:flutter_local_notifications/platform_specifics/ios/notification_details_ios.dart';
+
 
 class CalendarTabPage extends StatefulWidget implements TabPage {
   static String getTitleStatic(BuildContext context) {
@@ -33,6 +45,7 @@ class CalendarTabPage extends StatefulWidget implements TabPage {
 }
 
 class _CalendarTabPageState extends State<CalendarTabPage> {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   ValueChanged<DateTime> onDateSelected;
   DateTime selectedDate;
   List<Dosage> monthDosageList;
@@ -71,6 +84,51 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
     };
   }
 
+  void initNotifications() {
+    var initializationSettingsAndroid =
+    new InitializationSettingsAndroid('app_icon');
+    var initializationSettingsIOS = new InitializationSettingsIOS();
+    var initializationSettings = new InitializationSettings(
+      initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  void scheduleNotifications(DateTime from) async {
+    initNotifications();
+    api.dosages
+      .getDosages(DateTime(from.year, from.month, 1),
+      DateTime(from.year + 1, from.month, 1))
+      .then((dosages) {
+      setState(() {
+        dosages.forEach((dosage)
+        {
+          print(dosage.takeBeforeDate);
+          _scheduleNotification(dosage.medicineName, dosage.takeBeforeDate);
+        });
+      });
+    });
+  }
+
+  Future _scheduleNotification(String medicineName, DateTime intakeMoment) async {
+    var androidPlatformChannelSpecifics = new NotificationDetailsAndroid(
+      'dummyId',
+      'dummyChannelName',
+      'dummyChannelDescription');
+    var iOSPlatformChannelSpecifics =
+    new NotificationDetailsIOS();
+    var platformChannelSpecifics = new NotificationDetails(
+      androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    final formatter = new DateFormat('jm');
+
+    await flutterLocalNotificationsPlugin.schedule(
+      0,
+      'Don\'t forget to take your $medicineName!',
+      'Take your $medicineName at ${formatter.format(intakeMoment)}.',
+      intakeMoment,
+      platformChannelSpecifics);
+  }
+
   @override
   Widget build(BuildContext context) {
     final DateTime today = DateTime.now();
@@ -81,6 +139,7 @@ class _CalendarTabPageState extends State<CalendarTabPage> {
       selectedDate = DateTime(1980, 1, 1);
       onDateSelected(today);
     }
+    scheduleNotifications(today);
     return Scaffold(
         body: new Column(children: <Widget>[
       Calendar(isExpandable: true, onDateSelected: onDateSelected),
